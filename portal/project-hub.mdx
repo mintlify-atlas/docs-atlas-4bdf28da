@@ -1,0 +1,71 @@
+---
+title: "Project Hub: client dashboard for Zenn OS projects"
+description: "The Project Hub is your landing page after login — see active projects, milestone progress, and quick links to every section of your portal."
+---
+
+The Project Hub is the first thing you see after logging in as a client. It shows every active service you have with the agency, organized by service type, along with milestone progress and any items that need your attention. From here you can navigate to Proof Review, Billing, and your Asset Vault without leaving the page.
+
+## Your portal at a glance
+
+<CardGroup cols={2}>
+  <Card title="Project Hub" icon="monitor" href="/portal/project-hub">
+    See active projects and milestone progress across all your services. This is where you start every session.
+  </Card>
+  <Card title="Proof Review" icon="clipboard-check" href="/portal/proof-review">
+    View submitted deliverables and approve them or request revisions before work moves forward.
+  </Card>
+  <Card title="Billing" icon="receipt" href="/portal/billing-assets">
+    Review your transaction history, check invoice statuses, and download invoices.
+  </Card>
+  <Card title="Asset Vault" icon="download-cloud" href="/portal/billing-assets">
+    Download your final approved deliverables, organized by project and file type.
+  </Card>
+</CardGroup>
+
+## Service subscriptions
+
+Each service you are subscribed to appears as a tab at the top of the Project Hub. Zenn OS supports six service types:
+
+| Service type | Value |
+|---|---|
+| Web development | `web` |
+| Brand identity | `branding` |
+| Photography | `photography` |
+| Social media | `social_media` |
+| Video production | `video` |
+| Business development | `business_dev` |
+
+If you have only one active service, the tab bar is hidden and that service is shown directly. If you have multiple subscriptions, click any tab to switch between them.
+
+## Milestones and progress
+
+Each project is broken into milestones. The Project Hub only shows milestones where `isClientVisible` is `true` — internal planning milestones are always hidden from your view.
+
+For each visible milestone you will see:
+
+- **Name** — the phase or deliverable name
+- **Progress bar** — a numeric percentage from 0 to 100 representing how far along the milestone is
+- **Status badge** — one of `locked`, `unlocked`, `in_progress`, `submitted`, `approved`, or `overdue`
+- **Due date** — the expected completion date
+
+When a milestone reaches the `submitted` status, a **Review** link appears inline so you can jump directly to Proof Review for that deliverable.
+
+## Project health status
+
+Every project carries a health indicator that summarizes overall progress and risk:
+
+| Color | Meaning |
+|---|---|
+| Green | On track — milestones are progressing as planned |
+| Amber | Attention needed — a milestone is delayed or awaiting your input |
+| Red | At risk — immediate action required |
+
+The health status is set by the agency team. If you see a red or amber indicator and no proof is pending, contact your account manager through **Chat Hub**.
+
+## Action inbox
+
+The right-hand column of the Project Hub contains your Action Inbox. Any item that requires your sign-off — such as a proof ready for review or a contract awaiting signature — appears here with a direct link to the relevant section. Completed actions are shown in a faded state for reference.
+
+<Note>
+  Milestones with `isClientVisible: false` are never shown in your Project Hub regardless of their status. If you believe a milestone is missing from your view, ask your project manager to confirm visibility settings.
+</Note>

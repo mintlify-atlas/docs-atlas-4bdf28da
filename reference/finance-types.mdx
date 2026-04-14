@@ -1,0 +1,299 @@
+---
+title: "Transaction, Payout, and Lead type reference"
+description: "Complete reference for Transaction, PayoutAllocation, Lead, LeadStage, and ActivityEvent interfaces used in Zenn OS finance and CRM modules."
+---
+
+Zenn OS tracks money movement through the `Transaction` interface, which records both incoming payments from clients and outgoing payouts to affiliates and employees. Each transaction can be linked to a project and optionally to an invoice document. Payout splits for a given milestone are described separately with `PayoutAllocation`, allowing the admin to define per-person amounts or percentage splits before funds are released. The CRM pipeline is modelled with the `Lead` and `LeadStage` types, and every meaningful system event is recorded as an `ActivityEvent` for audit purposes.
+
+## TypeScript definitions
+
+```typescript
+export type TransactionType = 'incoming' | 'outgoing';
+export type TransactionStatus = 'paid' | 'pending' | 'overdue' | 'cancelled';
+
+export interface Transaction {
+  id: string;
+  date: string;
+  entity: string;
+  entityId: string;
+  projectId: string;
+  projectName: string;
+  type: TransactionType;
+  amount: number;
+  status: TransactionStatus;
+  description: string;
+  invoiceId?: string;
+  isFlagged?: boolean;
+  isReconciled?: boolean;
+}
+
+export interface PayoutAllocation {
+  userId: string;
+  userName: string;
+  role: string;
+  allocationType: 'fixed' | 'percentage';
+  amount: number;
+  percentage?: number;
+  notes?: string;
+}
+
+export type LeadStage =
+  | 'new'
+  | 'qualification'
+  | 'estimate_sent'
+  | 'negotiation'
+  | 'converted'
+  | 'lost';
+
+export interface Lead {
+  id: string;
+  companyName: string;
+  contactName: string;
+  email: string;
+  projectType: string;
+  estimatedBudget: number;
+  source: 'seo' | 'referral' | 'instagram' | 'linkedin' | 'cold' | 'direct';
+  stage: LeadStage;
+  score: number; // 0–100
+  temperature: 'cold' | 'warm' | 'hot';
+  createdAt: string;
+  lastActivity: string;
+  notes?: string;
+  isSpamFlag?: boolean;
+}
+
+export interface ActivityEvent {
+  id: string;
+  timestamp: string;
+  userId: string;
+  userName: string;
+  userRole: UserRole;
+  action: string;
+  detail: string;
+  projectId?: string;
+  projectName?: string;
+  category: 'financial' | 'legal' | 'production' | 'access' | 'system';
+  isRedFlag?: boolean;
+}
+```
+
+## TransactionType
+
+| Value | Description |
+|---|---|
+| `incoming` | Money received from a client — invoice payment, deposit, or milestone settlement. |
+| `outgoing` | Money sent out — affiliate payout, contractor fee, or operational expense. |
+
+## TransactionStatus
+
+| Value | Description |
+|---|---|
+| `paid` | Transaction has been settled and funds have cleared. |
+| `pending` | Transaction is expected but funds have not yet moved. |
+| `overdue` | Payment was due and has not been received past the due date. |
+| `cancelled` | Transaction was voided before settlement. |
+
+## Transaction fields
+
+<ResponseField name="id" type="string" required>
+  Unique transaction identifier. Format: `txn_<index>` (e.g. `txn_001`).
+</ResponseField>
+
+<ResponseField name="date" type="string" required>
+  ISO 8601 date string for when the transaction occurred or is scheduled.
+</ResponseField>
+
+<ResponseField name="entity" type="string" required>
+  Display name of the client, affiliate, or entity involved in the transaction.
+</ResponseField>
+
+<ResponseField name="entityId" type="string" required>
+  The `OSUser.id` of the entity involved, used to link the transaction to a user record.
+</ResponseField>
+
+<ResponseField name="projectId" type="string" required>
+  The `Project.id` this transaction is attributed to.
+</ResponseField>
+
+<ResponseField name="projectName" type="string" required>
+  Denormalised project name for display without a separate lookup.
+</ResponseField>
+
+<ResponseField name="type" type="TransactionType" required>
+  Direction of the money movement. Either `incoming` or `outgoing`.
+</ResponseField>
+
+<ResponseField name="amount" type="number" required>
+  Transaction value in the agency's base currency.
+</ResponseField>
+
+<ResponseField name="status" type="TransactionStatus" required>
+  Current settlement state. See the TransactionStatus table above.
+</ResponseField>
+
+<ResponseField name="description" type="string" required>
+  Short human-readable label for the transaction (e.g. `Milestone 1-2 Payment`).
+</ResponseField>
+
+<ResponseField name="invoiceId" type="string">
+  Optional reference to an external invoice or purchase order document (e.g. `inv_0021`, `po_0018`).
+</ResponseField>
+
+<ResponseField name="isFlagged" type="boolean">
+  When `true`, the transaction is marked for admin review — typically due to a dispute or anomaly.
+</ResponseField>
+
+<ResponseField name="isReconciled" type="boolean">
+  When `true`, the transaction has been matched against the agency's bank records.
+</ResponseField>
+
+## PayoutAllocation fields
+
+`PayoutAllocation` describes how a milestone payout is distributed across one or more team members. Multiple allocations can exist per milestone.
+
+<ResponseField name="userId" type="string" required>
+  The `OSUser.id` of the recipient.
+</ResponseField>
+
+<ResponseField name="userName" type="string" required>
+  Display name of the recipient for rendering without a user lookup.
+</ResponseField>
+
+<ResponseField name="role" type="string" required>
+  The role label of the recipient at time of allocation (e.g. `affiliate`, `employee`).
+</ResponseField>
+
+<ResponseField name="allocationType" type="'fixed' | 'percentage'" required>
+  Whether the payout is a flat currency amount (`fixed`) or a proportion of the milestone total (`percentage`).
+</ResponseField>
+
+<ResponseField name="amount" type="number" required>
+  The currency amount to pay out. For `percentage` type, this is the computed resolved value.
+</ResponseField>
+
+<ResponseField name="percentage" type="number">
+  The percentage share (0–100). Only relevant when `allocationType` is `percentage`.
+</ResponseField>
+
+<ResponseField name="notes" type="string">
+  Optional internal note attached to this allocation (e.g. rush fee justification).
+</ResponseField>
+
+## LeadStage
+
+Leads move through a CRM pipeline from first contact to conversion or loss.
+
+| Value | Description |
+|---|---|
+| `new` | Inquiry just received. Not yet reviewed or scored. |
+| `qualification` | Under evaluation — budget, fit, and decision-maker authority are being confirmed. |
+| `estimate_sent` | A scoped proposal or price estimate has been sent to the prospect. |
+| `negotiation` | Prospect is engaged and terms are being finalised. |
+| `converted` | Lead has signed and become a client. A project has been created. |
+| `lost` | Lead did not convert. Retained for pipeline analytics. |
+
+## Lead fields
+
+<ResponseField name="id" type="string" required>
+  Unique lead identifier. Format: `lead_<index>`.
+</ResponseField>
+
+<ResponseField name="companyName" type="string" required>
+  Name of the prospect's organisation.
+</ResponseField>
+
+<ResponseField name="contactName" type="string" required>
+  Full name of the primary point of contact at the prospect company.
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  Contact email address for the lead.
+</ResponseField>
+
+<ResponseField name="projectType" type="string" required>
+  The type of project the lead is enquiring about (e.g. `web`, `branding`, `full_brand`).
+</ResponseField>
+
+<ResponseField name="estimatedBudget" type="number" required>
+  Self-reported or estimated budget for the project in the agency's base currency.
+</ResponseField>
+
+<ResponseField name="source" type="'seo' | 'referral' | 'instagram' | 'linkedin' | 'cold' | 'direct'" required>
+  The acquisition channel that brought this lead in.
+</ResponseField>
+
+<ResponseField name="stage" type="LeadStage" required>
+  Current position in the CRM pipeline. See the LeadStage table above.
+</ResponseField>
+
+<ResponseField name="score" type="number" required>
+  Lead quality score from 0 to 100, based on budget, fit, and engagement signals.
+</ResponseField>
+
+<ResponseField name="temperature" type="'cold' | 'warm' | 'hot'" required>
+  A qualitative urgency indicator set by the admin. `hot` leads require immediate follow-up.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string" required>
+  ISO 8601 date string for when the lead was first entered into the system.
+</ResponseField>
+
+<ResponseField name="lastActivity" type="string" required>
+  ISO 8601 date string for the most recent interaction or status change.
+</ResponseField>
+
+<ResponseField name="notes" type="string">
+  Optional freeform notes added by the admin during qualification or negotiation.
+</ResponseField>
+
+<ResponseField name="isSpamFlag" type="boolean">
+  When `true`, the lead has been identified as spam or a low-quality bot submission.
+</ResponseField>
+
+## ActivityEvent fields
+
+`ActivityEvent` records are append-only audit log entries. Every significant action in the OS generates one.
+
+<ResponseField name="id" type="string" required>
+  Unique event identifier. Format: `act_<index>`.
+</ResponseField>
+
+<ResponseField name="timestamp" type="string" required>
+  ISO 8601 datetime string for when the event occurred.
+</ResponseField>
+
+<ResponseField name="userId" type="string" required>
+  The `OSUser.id` of the user who performed the action.
+</ResponseField>
+
+<ResponseField name="userName" type="string" required>
+  Display name of the acting user.
+</ResponseField>
+
+<ResponseField name="userRole" type="UserRole" required>
+  Role of the acting user at the time the event was recorded.
+</ResponseField>
+
+<ResponseField name="action" type="string" required>
+  Short label describing what happened (e.g. `Signed IP Transfer Deed`, `Payment Confirmed`).
+</ResponseField>
+
+<ResponseField name="detail" type="string" required>
+  Longer description providing additional context for the action.
+</ResponseField>
+
+<ResponseField name="projectId" type="string">
+  Optional reference to the project this event relates to.
+</ResponseField>
+
+<ResponseField name="projectName" type="string">
+  Denormalised project name for display.
+</ResponseField>
+
+<ResponseField name="category" type="'financial' | 'legal' | 'production' | 'access' | 'system'" required>
+  Classification of the event type, used to filter the activity feed.
+</ResponseField>
+
+<ResponseField name="isRedFlag" type="boolean">
+  When `true`, the event is surfaced prominently in the admin audit view as a potential policy violation.
+</ResponseField>

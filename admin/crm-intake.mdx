@@ -1,0 +1,129 @@
+---
+title: "CRM Inquiry Inbox: leads and pipeline management"
+description: "Manage inbound inquiries, advance leads through a six-stage pipeline, flag spam, generate quotations, and convert prospects into active clients."
+---
+
+Zenn OS handles new business through two connected tools: the **Inquiry Inbox**, which captures raw inbound messages and lets you triage them, and the **Quotation Maker**, which turns a qualified lead into a formal, client-facing estimate. Every inquiry starts in the inbox; once you qualify it, you promote it to the CRM lead pipeline and work it through the stages until it converts or is lost.
+
+<CardGroup cols={2}>
+  <Card title="Inquiry Inbox" icon="inbox">
+    Inbound message triage with status filtering, spam flagging, and direct conversion to a CRM lead.
+  </Card>
+  <Card title="Lead pipeline" icon="filter">
+    Six-stage CRM pipeline from first contact through conversion, with scoring and temperature tagging.
+  </Card>
+  <Card title="Quotation Maker" icon="file-text">
+    Line-item estimate builder with discount and tax fields, a live preview, and one-click send.
+  </Card>
+  <Card title="Spam detection" icon="shield-x">
+    Automatic `isSpamFlag` field surfaces suspicious leads for manual review before any follow-up.
+  </Card>
+</CardGroup>
+
+## Inquiry Inbox
+
+Navigate to the Inquiry Inbox at `/admin/intake`. The sidebar badge shows a count of unread inquiries. The inbox header displays the total number of enquiries and how many are in `new` status.
+
+Each enquiry row shows the contact name, company, email preview, message snippet, status badge, and received date. Clicking a row opens the **Enquiry Detail** panel on the right and automatically marks the enquiry as `read`.
+
+### Enquiry statuses
+
+| Status | Meaning |
+|---|---|
+| `new` | Unread; highlighted with a blue left border |
+| `read` | Opened but not yet replied |
+| `responded` | You have replied and are awaiting a response |
+| `converted` | Promoted to a CRM lead |
+| `spam` | Dismissed; hidden from the default view |
+
+Use the filter pills — **new**, **read**, **responded**, **converted**, **spam** — to focus the inbox. The **new** pill shows the unread count as a badge.
+
+### Enquiry sources
+
+Enquiries arrive from six channels, each shown with an emoji in the detail panel: Referral, Instagram, SEO, Direct (email), LinkedIn, and Cold Outreach. The source is set when the enquiry is created — either automatically from the public enquiry form or manually when you add an enquiry yourself.
+
+### Adding enquiries manually
+
+Click **Add Manual** to enter an enquiry that arrived through a channel not connected to the public form (e.g., a phone call, a trade show lead). Fill in the contact name, email, company, source, project type, budget range, and the message content.
+
+## Lead pipeline
+
+When you click **Convert to Lead** in the Enquiry Detail panel, the enquiry becomes a `Lead` in the CRM pipeline and the enquiry status updates to `'converted'`. You can then view and manage that lead from the lead pipeline view.
+
+### Lead stages
+
+```
+new → qualification → estimate_sent → negotiation → converted
+                                                   ↓
+                                                  lost
+```
+
+| Stage | What happens here |
+|---|---|
+| `new` | Lead has just been created; no contact made yet |
+| `qualification` | You are gathering requirements and assessing fit |
+| `estimate_sent` | A quotation has been sent; awaiting feedback |
+| `negotiation` | Pricing or scope is being discussed |
+| `converted` | Signed and moved to an active project |
+| `lost` | Not proceeding; kept for historical reporting |
+
+### Lead fields
+
+<AccordionGroup>
+  <Accordion title="Score and temperature">
+    Every lead has a `score` from `0` to `100` representing overall fit and intent. The `temperature` field is a simplified three-tier summary:
+
+    | Temperature | Typical score range |
+    |---|---|
+    | `cold` | 0–40 |
+    | `warm` | 41–74 |
+    | `hot` | 75–100 |
+
+    On the Executive Dashboard, only `warm` and `hot` leads appear in the **Hot Leads** panel. The temperature is set manually when you create or edit a lead.
+  </Accordion>
+  <Accordion title="Source">
+    The `source` field tracks where the lead originated: `seo`, `referral`, `instagram`, `linkedin`, `cold`, or `direct`. Use this data in the Analytics dashboard to understand which acquisition channels produce the highest-converting leads.
+  </Accordion>
+  <Accordion title="estimatedBudget">
+    The `estimatedBudget` is a number in dollars. It populates the lead card on the Executive Dashboard (displayed in thousands, e.g., `$62k`). When you generate a quotation, the line items should sum to a figure close to this estimate.
+  </Accordion>
+  <Accordion title="Spam detection">
+    When `isSpamFlag` is `true`, the lead displays a warning triangle instead of a temperature dot everywhere it appears in the UI — in the inbox, the pipeline, and the Executive Dashboard's Hot Leads panel. Review the contact details, estimated budget, and message content before engaging. Mark the enquiry as `spam` to suppress it.
+  </Accordion>
+</AccordionGroup>
+
+## Lead-to-client conversion workflow
+
+<Steps>
+  <Step title="Receive and triage the enquiry">
+    An inbound enquiry arrives in the Inquiry Inbox with `status: 'new'`. Open it to read the message, review the source and budget range, and check whether `isSpamFlag` is set. If it looks legitimate, change the status to `responded` after sending your first reply.
+  </Step>
+  <Step title="Convert to a CRM lead">
+    Once you confirm the prospect is serious, click **Convert to Lead** in the Enquiry Detail panel. The enquiry status updates to `converted` and a new lead appears in the pipeline with `stage: 'new'`, `score: 70`, and `temperature: 'warm'` as defaults.
+  </Step>
+  <Step title="Qualify the lead">
+    Move the lead to `qualification`. Call or email the prospect to understand the full scope, timeline, and decision-making process. Update the `estimatedBudget` and `score` as you learn more.
+  </Step>
+  <Step title="Generate a quotation">
+    Navigate to the **Quotation Maker** at `/admin/quotation`. Select the lead or create a new quote addressed to the prospect. Add line items by category (design, development, video, strategy, retainer, or other), apply discount and tax rates, set a validity date, and preview the formatted output. Click **Send** to deliver the quote or **Download** to export it as a PDF.
+  </Step>
+  <Step title="Negotiate and close">
+    After sending the quotation, move the lead to `estimate_sent`. If the prospect responds with questions or counter-offers, advance to `negotiation` and revise the quote as needed. When the prospect accepts, click **Convert** to create the active project and link it to the new client account.
+  </Step>
+  <Step title="Lose gracefully">
+    If the prospect does not proceed, move the lead to `lost` with a note explaining why. The lead remains in the system for reporting — lost leads are excluded from the active pipeline value on the Executive Dashboard.
+  </Step>
+</Steps>
+
+## Quotation Maker
+
+The Quotation Maker at `/admin/quotation` generates client-facing estimates. Each quote includes:
+
+- **Header** — Zenn Studios branding, quote date, validity date, and the client's company and address
+- **Line items** — each with a description, category, quantity, and unit price
+- **Totals block** — subtotal, optional discount percentage, tax percentage, and final total
+- **Terms section** — payment schedule and revision policy notes
+
+Line item categories (design, development, video, strategy, retainer, other) are color-coded in the builder and carry through to the preview. The live preview panel updates as you type.
+
+You can start a quote from a template (branding, web dev, video production, etc.) or build it from scratch. Once sent, the quote status moves through `draft → sent → viewed → accepted / rejected / expired`.

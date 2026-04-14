@@ -1,0 +1,110 @@
+{
+  "projectType": "saas",
+  "projectName": "Zenn OS",
+  "projectDescription": "A role-based agency control center for managing projects, finance, personnel, contracts, and client deliverables across admin, employee, affiliate, and client roles.",
+  "theme": "luma",
+  "primaryColor": "#7c7c7c",
+  "lightColor": "#080808",
+  "darkColor": "#c1c1c1",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "user-roles"
+            ]
+          },
+          {
+            "group": "Admin Control Center",
+            "pages": [
+              "admin/executive-dashboard",
+              "admin/projects",
+              "admin/finance",
+              "admin/personnel",
+              "admin/crm-intake",
+              "admin/contracts-permissions"
+            ]
+          },
+          {
+            "group": "Team & Talent",
+            "pages": [
+              "team/assigned-board",
+              "team/milestones-submissions",
+              "team/vault-legal"
+            ]
+          },
+          {
+            "group": "Client Portal",
+            "pages": [
+              "portal/project-hub",
+              "portal/proof-review",
+              "portal/billing-assets"
+            ]
+          },
+          {
+            "group": "Platform Features",
+            "pages": [
+              "platform/chat",
+              "platform/nudge-logic",
+              "platform/search-settings"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "groups": [
+          {
+            "group": "Data Model",
+            "pages": [
+              "reference/users-roles",
+              "reference/projects-milestones",
+              "reference/finance-types",
+              "reference/contracts-vault"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "reference/onboarding",
+              "reference/authentication",
+              "reference/deployment"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Role-based access control with four distinct roles: admin, employee, affiliate, and client",
+    "Executive Dashboard with real-time KPIs, P&L charts, project health monitoring, and live activity feed",
+    "Financial Ledger and Payout Allocator for tracking transactions and distributing earnings",
+    "Project management with milestone tracking, dependency architecture, and health status indicators",
+    "CRM Inquiry Inbox with lead scoring, pipeline stages, and spam detection",
+    "Client Portal with proof review, billing history, and asset vault for deliverables",
+    "Nudge Logic system for automated reminders to talent and clients",
+    "Integrated Chat Hub with role-scoped channels (client-shared, agency-internal, executive-only)",
+    "Equipment Tracker for managing agency and personal gear",
+    "IP and contract management with e-signature workflow"
+  ],
+  "publicApiSurface": [
+    "UserRole: 'admin' | 'employee' | 'affiliate' | 'client'",
+    "OSUser: id, email, name, role, title, isOnboarded, status, reliabilityScore",
+    "Project: id, name, clientId, type, status, milestones, healthStatus, completionPercent",
+    "Milestone: id, name, status, assignedTo, startDate, endDate, progress, dependencies",
+    "Transaction: id, date, entity, projectId, type, amount, status, isFlagged",
+    "PayoutAllocation: userId, allocationType, amount, percentage",
+    "Lead: id, companyName, stage, score, temperature, estimatedBudget, source",
+    "Nudge: id, recipientId, triggerType, level, status, projectId",
+    "Contract: id, type, recipientName, status, sentAt, executedAt",
+    "ChatChannel: id, name, type ('client_shared' | 'agency_internal' | 'executive_only' | 'direct'), members",
+    "VaultAsset: id, name, type, visibility ('internal' | 'client_visible'), versions",
+    "Equipment: id, name, type, owner, status, checkedOutTo, condition",
+    "ActivityEvent: id, userId, action, category ('financial' | 'legal' | 'production' | 'access' | 'system'), isRedFlag"
+  ]
+}

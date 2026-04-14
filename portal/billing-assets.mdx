@@ -1,0 +1,73 @@
+---
+title: "Billing history and asset downloads for clients"
+description: "View your payment history, check invoice statuses, and download approved project deliverables — all from the Billing and Asset Vault sections of your portal."
+---
+
+Two sections of the Client Portal handle the practical side of your engagement: **Billing** shows every financial transaction tied to your projects, and **Asset Vault** is where you download your approved final deliverables. Both are accessible from the sidebar under the **Client Portal** group.
+
+<Tabs>
+  <Tab title="Billing">
+
+## Your transaction history
+
+The Billing page lists all transactions associated with your account. From your perspective as a client, transactions with `type: "incoming"` represent payments you have made to the agency. Each row in the table shows:
+
+| Field | Description |
+|---|---|
+| `date` | When the transaction was recorded |
+| `description` | A plain-language summary of what the payment covers |
+| `amount` | The transaction amount |
+| `status` | Current payment status (see below) |
+| `invoiceId` | The invoice reference number, if one has been issued |
+
+### Transaction statuses
+
+| Status | Meaning |
+|---|---|
+| `paid` | Payment has been received and reconciled |
+| `pending` | Invoice has been sent and payment is expected |
+| `overdue` | The payment due date has passed without receipt |
+| `cancelled` | The transaction was voided and no payment is owed |
+
+### Downloading invoices
+
+Any transaction that has an `invoiceId` has a downloadable invoice. Click the download icon on the right side of any transaction row to save the invoice as a PDF.
+
+<Warning>
+  If any transaction shows a status of `overdue`, your project work may be paused until the balance is cleared. Contact your account manager immediately at the email address on the invoice, or reach out through **Chat Hub** in the sidebar.
+</Warning>
+
+  </Tab>
+  <Tab title="Asset Vault">
+
+## Downloading your deliverables
+
+The Asset Vault is your library of approved final files. Only assets where `visibility: "client_visible"` are shown here — internal working files, raw footage, and unfinished drafts are not included in your view.
+
+### Downloading a file
+
+Click the download icon next to any asset to get the latest version. By default, Zenn OS always downloads the most recent entry in the `versions` array — you do not need to select a version manually unless you want an older one.
+
+### Asset types
+
+Your vault can contain any of the following file types:
+
+| Type | Examples |
+|---|---|
+| `video` | Final cuts, social edits, brand films |
+| `image` | Approved photography, graphics, renders |
+| `document` | Final copy, reports, strategy documents |
+| `audio` | Voiceovers, music beds, audio branding |
+| `archive` | Packaged design files, font kits, full brand bundles |
+| `design` | Editable source files, brand guidelines |
+
+### Version history
+
+Every asset in the vault has a `versions` array. Each version entry includes a label, upload timestamp, and direct download URL. To access an older version, expand the asset row and select the version you need from the history list.
+
+<Note>
+  Assets appear in your vault only after the associated milestone has been approved in Proof Review and the agency team has set the file to `client_visible`. If you are expecting a file and it is not showing up, check whether the corresponding proof has been approved, or ask your project manager through **Chat Hub**.
+</Note>
+
+  </Tab>
+</Tabs>

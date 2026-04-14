@@ -1,0 +1,198 @@
+---
+title: "Project and Milestone type reference for Zenn OS"
+description: "Complete reference for the Project and Milestone interfaces, ProjectStatus and MilestoneStatus union types, and health tracking fields in Zenn OS."
+---
+
+Projects are the central unit of work in Zenn OS. Each project belongs to a client, carries a financial value, and is broken into an ordered sequence of milestones. Milestones have their own status lifecycle and can enforce dependencies — a milestone will not unlock until its predecessors are complete. The project's `healthStatus` and `completionPercent` fields give admins an at-a-glance view of delivery risk without opening individual milestones.
+
+## TypeScript definitions
+
+```typescript
+export type ProjectStatus =
+  | 'active'
+  | 'awaiting_approval'
+  | 'on_hold'
+  | 'completed'
+  | 'archived';
+
+export type MilestoneStatus =
+  | 'locked'
+  | 'unlocked'
+  | 'in_progress'
+  | 'submitted'
+  | 'approved'
+  | 'overdue';
+
+export interface Milestone {
+  id: string;
+  name: string;
+  status: MilestoneStatus;
+  assignedTo: string[]; // user IDs
+  startDate: string;
+  endDate: string;
+  progress: number; // 0–100
+  isClientVisible: boolean;
+  dependencies: string[]; // milestone IDs
+  payout?: number;
+  notes?: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  clientId: string;
+  clientName: string;
+  type: 'web' | 'video' | 'branding' | 'social' | 'full_brand';
+  status: ProjectStatus;
+  totalValue: number;
+  paidToDate: number;
+  startDate: string;
+  endDate: string;
+  milestones: Milestone[];
+  assignedTeam: string[]; // user IDs
+  healthStatus: 'green' | 'amber' | 'red';
+  completionPercent: number;
+  vaultId?: string;
+  brief?: string;
+  tags?: string[];
+}
+```
+
+## ProjectStatus
+
+| Value | Description |
+|---|---|
+| `active` | Project is live and milestones are being worked on. |
+| `awaiting_approval` | A deliverable or proposal has been submitted and is pending client sign-off. |
+| `on_hold` | Work is paused — typically due to a pending payment or client decision. |
+| `completed` | All milestones are approved and the project is closed out. |
+| `archived` | Project is read-only. Removed from active views but retained for audit and reference. |
+
+## MilestoneStatus
+
+Milestones progress through a defined lifecycle. Dependency enforcement prevents work starting out of sequence.
+
+| Value | Description |
+|---|---|
+| `locked` | Cannot be started. One or more dependency milestones have not yet been approved. |
+| `unlocked` | Dependencies met. Assigned team members can begin work. |
+| `in_progress` | Work has started. Progress percentage is being updated. |
+| `submitted` | Assignee has submitted proof of completion for client or admin review. |
+| `approved` | Approved by the client or admin. Any dependent milestones are now unlocked. |
+| `overdue` | The `endDate` has passed without the milestone reaching `submitted` or `approved`. |
+
+## Project fields
+
+<ResponseField name="id" type="string" required>
+  Unique project identifier. Format: `proj_<index>` (e.g. `proj_001`).
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Human-readable project name displayed across dashboards and chat channels.
+</ResponseField>
+
+<ResponseField name="clientId" type="string" required>
+  The `id` of the `OSUser` with role `client` who owns this project.
+</ResponseField>
+
+<ResponseField name="clientName" type="string" required>
+  Denormalised display name of the client for quick rendering without a user lookup.
+</ResponseField>
+
+<ResponseField name="type" type="'web' | 'video' | 'branding' | 'social' | 'full_brand'" required>
+  The primary service category delivered by this project.
+</ResponseField>
+
+<ResponseField name="status" type="ProjectStatus" required>
+  Current lifecycle stage of the project. See the ProjectStatus table above.
+</ResponseField>
+
+<ResponseField name="totalValue" type="number" required>
+  Total contracted value of the project in the agency's base currency.
+</ResponseField>
+
+<ResponseField name="paidToDate" type="number" required>
+  Amount received from the client so far. Used alongside `totalValue` to derive outstanding balance.
+</ResponseField>
+
+<ResponseField name="startDate" type="string" required>
+  ISO 8601 date string for the project kick-off date.
+</ResponseField>
+
+<ResponseField name="endDate" type="string" required>
+  ISO 8601 date string for the contracted delivery deadline.
+</ResponseField>
+
+<ResponseField name="milestones" type="Milestone[]" required>
+  Ordered list of milestones. Each milestone can declare dependencies on other milestones in this array.
+
+  <Expandable title="Milestone fields">
+    <ResponseField name="id" type="string" required>
+      Unique milestone identifier. Format: `ms_<projectIndex>_<milestoneIndex>` (e.g. `ms_001_2`).
+    </ResponseField>
+
+    <ResponseField name="name" type="string" required>
+      Display name for the milestone (e.g. `UI/UX Design System`).
+    </ResponseField>
+
+    <ResponseField name="status" type="MilestoneStatus" required>
+      Current lifecycle status. See the MilestoneStatus table above.
+    </ResponseField>
+
+    <ResponseField name="assignedTo" type="string[]" required>
+      Array of `OSUser` IDs responsible for delivering this milestone.
+    </ResponseField>
+
+    <ResponseField name="startDate" type="string" required>
+      ISO 8601 date string for when work on this milestone should begin.
+    </ResponseField>
+
+    <ResponseField name="endDate" type="string" required>
+      ISO 8601 date string for the milestone deadline.
+    </ResponseField>
+
+    <ResponseField name="progress" type="number" required>
+      Completion percentage from 0 to 100. Updated by the assigned team.
+    </ResponseField>
+
+    <ResponseField name="isClientVisible" type="boolean" required>
+      When `true`, the milestone appears in the client portal. Internal milestones set this to `false`.
+    </ResponseField>
+
+    <ResponseField name="dependencies" type="string[]" required>
+      Array of milestone IDs that must reach `approved` status before this milestone unlocks. An empty array means no dependencies.
+    </ResponseField>
+
+    <ResponseField name="payout" type="number">
+      Amount owed to the assigned team member(s) upon approval of this milestone.
+    </ResponseField>
+
+    <ResponseField name="notes" type="string">
+      Optional internal notes visible only to admin and employee roles.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="assignedTeam" type="string[]" required>
+  Array of `OSUser` IDs for every team member working on this project, regardless of specific milestone assignments.
+</ResponseField>
+
+<ResponseField name="healthStatus" type="'green' | 'amber' | 'red'" required>
+  At-a-glance delivery risk indicator set by the admin. `green` means on track, `amber` means at risk, `red` means critical.
+</ResponseField>
+
+<ResponseField name="completionPercent" type="number" required>
+  Overall project completion from 0 to 100, typically derived from milestone progress values.
+</ResponseField>
+
+<ResponseField name="vaultId" type="string">
+  ID of the associated vault collection where project assets are stored.
+</ResponseField>
+
+<ResponseField name="brief" type="string">
+  Optional project brief or scope description.
+</ResponseField>
+
+<ResponseField name="tags" type="string[]">
+  Optional taxonomy tags used for filtering in the admin dashboard.
+</ResponseField>

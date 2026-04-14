@@ -1,0 +1,57 @@
+---
+title: "Proof Review: approve or revise client deliverables"
+description: "Review submitted deliverables in Zenn OS, approve proofs or request revisions, and track version history for each project milestone."
+---
+
+When your agency team finishes a deliverable, they mark it as submitted for proof. Zenn OS routes you to the Proof Review page where you can watch, read, or inspect the file, leave time-stamped or inline annotations, and then either approve the work or send it back for revision. No email threads — everything happens in one place.
+
+## What appears in Proof Review
+
+Any `VaultAsset` with `isSubmittedAsProof: true` is surfaced here. The `proofVersion` field tells you which version of the file is currently under review, so you always know whether you are looking at an original submission or a revised version.
+
+The following asset types can appear as proofs:
+
+| Asset type | Examples |
+|---|---|
+| `video` | Campaign edits, brand films, social cuts |
+| `image` | Photography galleries, graphics, renders |
+| `document` | Copy decks, scripts, strategy briefs |
+| `design` | Logo presentations, brand guidelines, UI mockups |
+
+<Note>
+  Assets with `visibility: "internal"` are never shown in Proof Review. Only assets marked `visibility: "client_visible"` and `isSubmittedAsProof: true` are surfaced to you.
+</Note>
+
+## Proof review workflow
+
+<Steps>
+  <Step title="Open the proof">
+    Navigate to **Proof Review** in the sidebar, or click the **Review** link that appears inline on a submitted milestone in your Project Hub. The asset opens in the full-screen viewer. The current proof version is shown in the header next to the file name.
+  </Step>
+  <Step title="Leave annotations or feedback">
+    While viewing the asset, type a note in the **Annotations** panel on the right. For video proofs, your note is pinned to the current timestamp so the team knows exactly where the feedback applies. You can add as many annotations as you need before making a final decision.
+  </Step>
+  <Step title="Approve or request revision">
+    When you are ready to decide, use the buttons in the top bar:
+
+    - Click **Approve Deliverable** to sign off on the current version. The milestone status moves to `approved` and the team is notified to proceed.
+    - Click **Request Revisions** to send the proof back. Your annotations are preserved for the team to address in the next version.
+  </Step>
+</Steps>
+
+<Tip>
+  Every proof has a full version history. Even after you approve a deliverable, you can see all previous versions by checking the `versions` array on the asset — each entry includes the version label, upload date, and a direct URL. This is useful if you need to compare the approved cut against an earlier draft.
+</Tip>
+
+## After approval
+
+When you click **Approve Deliverable**, two things happen automatically:
+
+1. The milestone linked to that asset moves to `approved` status in the internal project view.
+2. The approved file becomes available for download in your **Asset Vault**, provided the agency team has set its visibility to `client_visible`.
+
+If additional proofs are queued (for example, multiple photography rounds or a series of video cuts), the next pending proof appears in the Proof Review queue after you act on the current one.
+
+<Note>
+  Approving a proof is a formal sign-off. If you need to revisit an approval, contact your project manager directly through **Chat Hub**. The agency team can reopen a proof for a new review cycle.
+</Note>

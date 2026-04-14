@@ -1,0 +1,153 @@
+---
+title: "OSUser and UserRole type reference for Zenn OS"
+description: "Complete reference for the OSUser interface, UserRole union type, ServiceSubscription, and account status values used across Zenn OS."
+---
+
+Every person in Zenn OS is represented as an `OSUser`. The role field determines which views and actions are available to that user — admins have full system access, employees operate within the agency, affiliates are contracted freelancers, and clients have a scoped portal view that shows only their own projects and approvals. The `status` field controls day-to-day access level independent of role.
+
+## TypeScript definitions
+
+```typescript
+export type UserRole = 'admin' | 'employee' | 'affiliate' | 'client';
+
+export type ServiceType =
+  | 'web'
+  | 'branding'
+  | 'photography'
+  | 'social_media'
+  | 'video'
+  | 'business_dev';
+
+export interface ServiceSubscription {
+  type: ServiceType;
+  projectId?: string;
+  projectName?: string;
+  startedAt: string;
+}
+
+export interface OSUser {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  title: string;
+  avatar?: string;
+  isOnboarded: boolean;
+  timezone: string;
+  joinedAt: string;
+  status: 'active' | 'limited' | 'ooo' | 'blacklisted';
+  skills?: string[];
+  reliabilityScore?: number; // 0–100
+  nudgeCount?: number;
+  currentLoad?: number; // active projects
+  // Client-only
+  serviceSubscriptions?: ServiceSubscription[];
+  company?: string;
+}
+```
+
+## UserRole
+
+The `UserRole` union controls permission scope throughout the OS.
+
+| Value | Description |
+|---|---|
+| `admin` | Full system access — finance, legal, vault, all users, and settings. |
+| `employee` | Internal staff. Access to production, assigned projects, and team tooling. |
+| `affiliate` | Contracted freelancer. Scoped to assigned milestones and their own payout data. |
+| `client` | Portal access only. Sees their own projects, approved milestones, and proofs. |
+
+## Account status
+
+The `status` field on `OSUser` reflects current access level and is set by an admin.
+
+| Value | Description |
+|---|---|
+| `active` | Full access for the user's role. |
+| `limited` | Restricted access — typically applied before onboarding is complete. |
+| `ooo` | Out of office. User is temporarily inactive; assignments are paused. |
+| `blacklisted` | Access revoked. User cannot log in or interact with the system. |
+
+## OSUser fields
+
+<ResponseField name="id" type="string" required>
+  Unique identifier for the user. Format: `usr_<role>_<index>` (e.g. `usr_admin_01`).
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  Primary email address used for authentication and system notifications.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Full display name shown throughout the OS.
+</ResponseField>
+
+<ResponseField name="role" type="UserRole" required>
+  Permission role. One of `admin`, `employee`, `affiliate`, or `client`. See the UserRole table above.
+</ResponseField>
+
+<ResponseField name="title" type="string" required>
+  Job title or position label displayed on the user's profile.
+</ResponseField>
+
+<ResponseField name="avatar" type="string">
+  Optional URL for the user's profile image.
+</ResponseField>
+
+<ResponseField name="isOnboarded" type="boolean" required>
+  Whether the user has completed the onboarding flow. Users with `isOnboarded: false` are automatically placed in `limited` status.
+</ResponseField>
+
+<ResponseField name="timezone" type="string" required>
+  IANA timezone string (e.g. `America/Toronto`). Used to localise nudge scheduling and deadline displays.
+</ResponseField>
+
+<ResponseField name="joinedAt" type="string" required>
+  ISO 8601 date string representing when the user was added to the system.
+</ResponseField>
+
+<ResponseField name="status" type="'active' | 'limited' | 'ooo' | 'blacklisted'" required>
+  Current access status. See the Account status table above.
+</ResponseField>
+
+<ResponseField name="skills" type="string[]">
+  List of skill tags. Primarily used for affiliate users (e.g. `['Color Grading', 'DaVinci Resolve']`).
+</ResponseField>
+
+<ResponseField name="reliabilityScore" type="number">
+  Integer from 0–100 reflecting the user's historical on-time delivery rate. Computed by the OS; not manually editable.
+</ResponseField>
+
+<ResponseField name="nudgeCount" type="number">
+  Running count of automated nudges sent to this user. High counts surface in the admin dashboard as a reliability signal.
+</ResponseField>
+
+<ResponseField name="currentLoad" type="number">
+  Number of active projects currently assigned to this user.
+</ResponseField>
+
+<ResponseField name="serviceSubscriptions" type="ServiceSubscription[]">
+  Client-only field. Lists the active service types the client is subscribed to.
+
+  <Expandable title="ServiceSubscription fields">
+    <ResponseField name="type" type="ServiceType" required>
+      The service category. One of `web`, `branding`, `photography`, `social_media`, `video`, or `business_dev`.
+    </ResponseField>
+
+    <ResponseField name="projectId" type="string">
+      Optional ID of the project this subscription is linked to.
+    </ResponseField>
+
+    <ResponseField name="projectName" type="string">
+      Human-readable name of the linked project.
+    </ResponseField>
+
+    <ResponseField name="startedAt" type="string" required>
+      ISO 8601 date string for when the subscription began.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="company" type="string">
+  Client-only field. The company or organisation name associated with the client account.
+</ResponseField>

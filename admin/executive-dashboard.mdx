@@ -1,0 +1,105 @@
+---
+title: "Executive Dashboard: agency KPIs and live activity"
+description: "Real-time admin command center with KPI cards, P&L chart, live activity feed, project health indicators, and the hot lead pipeline in one view."
+---
+
+The Executive Dashboard is your agency's central nerve system. It surfaces the metrics that matter most — revenue, margin, project velocity, and pipeline value — alongside a real-time feed of every significant action taken across Zenn OS. Everything on this page updates live, and you can hide financial figures instantly if you're sharing your screen.
+
+<CardGroup cols={2}>
+  <Card title="KPI cards" icon="chart-line">
+    Four top-line metrics with trend sparklines and period-over-period change.
+  </Card>
+  <Card title="P&L chart" icon="chart-area">
+    Receivables vs. Payables area chart with monthly, quarterly, and yearly views.
+  </Card>
+  <Card title="Live activity feed" icon="radio">
+    Timestamped log of every financial, legal, production, access, and system event.
+  </Card>
+  <Card title="Project health panel" icon="heart-pulse">
+    Green / amber / red status indicators with completion percentages for active projects.
+  </Card>
+  <Card title="Hot leads panel" icon="fire">
+    Warm and hot leads from the CRM pipeline, with a burn-rate alert when revisions exceed scope.
+  </Card>
+  <Card title="Sensitivity mode" icon="eye-slash">
+    One-click toggle that replaces all financial figures with `••••••` for screen sharing.
+  </Card>
+</CardGroup>
+
+## KPI cards
+
+The four KPI cards run across the top of the dashboard. Each card shows a large current value, a trend indicator (green arrow up, red arrow down), a period-over-period change label, and a mini sparkline plotting the last six data points.
+
+| Metric | What it measures |
+|---|---|
+| **Gross Revenue** | Total invoiced amount across all projects in the current period |
+| **Net Profit** | Gross revenue minus all outgoing payouts and expenses |
+| **Project Velocity** | Rolling average days to complete a milestone across active projects |
+| **Active Pipeline** | Sum of total contract values for all active projects |
+
+When **Sensitivity Mode** is on, all four values display as `••••••` and the sparklines are hidden entirely. The mode activates and deactivates with a single click on the **Sensitivity Mode** button in the header. The button border turns red while the mode is active.
+
+## P&L chart
+
+The P&L chart occupies the left two-thirds of the main content row. It is an area chart showing **Receivables** (solid line) against **Payables** (dashed line) month by month. Hovering over any data point shows a tooltip with exact dollar values.
+
+Use the toggle buttons in the chart header to switch between:
+
+- `monthly` — last six calendar months (default)
+- `quarterly` — last four quarters
+- `yearly` — annual totals
+
+<Info>
+The chart data comes from reconciled transactions in the Financial Ledger. Unreconciled transactions are included in the Payables line but flagged separately in the Ledger view.
+</Info>
+
+## Live activity feed
+
+The live feed panel occupies the right third of the main content row. It streams the most recent `ActivityEvent` records, each tagged with a category and a timestamp.
+
+**Category color coding:**
+
+- `financial` — green dot (payment confirmed, invoice issued)
+- `legal` — red dot (contract signed, IP transferred)
+- `production` — blue dot (milestone submitted or approved)
+- `access` — red dot when combined with `isRedFlag: true`
+- `system` — grey dot (new inquiry received, user onboarded)
+
+Events with `isRedFlag: true` render with a subtle red background tint and a warning triangle icon. These indicate actions that break expected workflow — for example, manually unlocking Vault access without milestone dependencies being met.
+
+<Warning>
+Red flag events require your attention. They are not blocked automatically — Zenn OS logs them and surfaces them here so you can follow up.
+</Warning>
+
+## Project health panel
+
+The project health panel lists all projects with `status: 'active'`. Each row shows:
+
+- A colored status dot: **green** (on track), **amber** (at risk), **red** (critical)
+- The project name and client name
+- A completion percentage and a proportionally filled progress bar
+
+Clicking any project row navigates directly to the **Dependency Architect** with that project pre-selected, so you can inspect the milestone chain without leaving the dashboard context.
+
+The **Dependency Architect** link in the panel header navigates to `/admin/dependency` for a full graph view.
+
+## Hot leads panel
+
+The hot leads panel lists all leads where `temperature` is `'warm'` or `'hot'` and `stage` is not `'converted'` or `'lost'`. For each lead you see:
+
+- A colored dot: red for `hot`, amber for `warm`
+- The company name and current pipeline stage
+- The estimated budget (rounded to the nearest thousand)
+- A temperature badge
+
+Leads flagged with `isSpamFlag: true` display a warning triangle instead of the temperature dot, alerting you to review before engaging.
+
+At the bottom of the panel, a **Burn Rate Alert** appears when active projects have logged revision rounds beyond their contracted scope. Clicking **View Pipeline** in the panel header navigates to the full Inquiry Inbox at `/admin/intake`.
+
+## Quick-Call Alert button
+
+The **Quick-Call Alert** button in the dashboard header sends an immediate push notification to any team member you choose. It opens a modal where you type a brief reason for the call, select the recipient, and dispatch the alert. Use this when a milestone is at risk and you need a response faster than a nudge would provide.
+
+<Tip>
+Combine the Quick-Call Alert with the Personnel Directory's reliability score to decide who to contact first. Team members with lower `reliabilityScore` values and higher `nudgeCount` values may need a direct call rather than a nudge.
+</Tip>

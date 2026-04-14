@@ -1,0 +1,125 @@
+---
+title: "Understanding user roles and access levels in Zenn OS"
+description: "Zenn OS has four roles — admin, employee, affiliate, and client — each with a distinct workspace, navigation, and set of permissions."
+---
+
+Every Zenn OS account belongs to one of four roles: **admin**, **employee**, **affiliate**, or **client**. Your role is assigned when your account is created and is detected automatically at login from your email address. It controls which sections of the platform you can see, which pages you can navigate to, and what actions you can take. No role can access another role's workspace without impersonation rights granted explicitly by an admin.
+
+<Tabs>
+  <Tab title="Admin">
+    The admin role has access to the entire platform. Admins are typically agency owners or operations leads responsible for overseeing every project, team member, and financial transaction.
+
+    **Dashboard landing page:** `/admin/executive-dashboard`
+
+    **Navigation sections:**
+
+    The admin sidebar includes all three operational sections plus platform-wide tools:
+
+    - **Command** — Executive Dashboard, Financial Ledger, Payout Allocator
+    - **Operations** — Projects, Personnel Directory, Inquiry Inbox, Quotation Maker, Master Calendar, Dependency Architect, IP & Contracts, Permission Matrix, Analytics, Equipment Tracker
+    - **My Work** — Project Vault (shared with team roles)
+    - **Platform** — Nudge Logic, Chat Hub, Global Search, Settings
+
+    **Typical responsibilities:**
+
+    - Monitor agency health via the Executive Dashboard KPIs and activity feed
+    - Review and reconcile transactions in the **Financial Ledger**
+    - Allocate payouts to team members and affiliates per milestone in the **Payout Allocator**
+    - Manage the full project lifecycle including milestones, health status, and team assignment
+    - Handle inbound leads through the **Inquiry Inbox** and **Quotation Maker**
+    - Issue and track contracts (MSAs, NDAs, IP transfers, SOWs) through **IP & Contracts**
+    - Configure automated follow-ups in **Nudge Logic**
+    - Track agency-owned equipment via the **Equipment Tracker**
+
+    <Info>
+      Admins can use the **View As** impersonation feature to preview the platform exactly as an employee, affiliate, or client sees it. This is useful for support and QA without needing to log out.
+    </Info>
+  </Tab>
+  <Tab title="Employee">
+    The employee role is for full-time or part-time agency staff. Employees see only their assigned work and the shared platform tools. They cannot access financial data, personnel records, or lead management.
+
+    **Dashboard landing page:** `/team/assigned-board`
+
+    **Navigation sections:**
+
+    - **My Work** — My Projects, Project Vault, Proof Submission, Milestone Update, My Calendar, Legal & IP
+    - **Platform** — Chat Hub, Global Search, Settings
+
+    **Typical responsibilities:**
+
+    - Track active project assignments and milestone progress on the **My Projects** board
+    - Upload deliverables and submit proof of work through **Proof Submission**
+    - Log milestone progress updates in **Milestone Update**
+    - Manage their schedule in **My Calendar**
+    - Access project files and version history in **Project Vault**
+    - Review contracts relevant to their work in **Legal & IP**
+
+    <Note>
+      Each employee has a `reliabilityScore` (0–100) that reflects their track record of on-time milestone delivery. Admins can view this score in the Personnel Directory.
+    </Note>
+  </Tab>
+  <Tab title="Affiliate">
+    The affiliate role is for external freelancers and contractors. Their workspace is identical to the employee workspace — they land on the same board and have access to the same My Work and Platform sections. The distinction exists in account type and how payouts are structured.
+
+    **Dashboard landing page:** `/team/assigned-board`
+
+    **Navigation sections:**
+
+    - **My Work** — My Projects, Project Vault, Proof Submission, Milestone Update, My Calendar, Legal & IP
+    - **Platform** — Chat Hub, Global Search, Settings
+
+    **Typical responsibilities:**
+
+    - Work on projects and milestones assigned to them by an admin
+    - Submit proof of completed deliverables for admin approval
+    - Access their contracts and IP agreements in **Legal & IP**
+    - Communicate with the team via **Chat Hub**
+
+    <Info>
+      Affiliates have the same navigation as employees but are typically on milestone-based or percentage payout arrangements configured in the Payout Allocator rather than a fixed salary structure.
+    </Info>
+  </Tab>
+  <Tab title="Client">
+    The client role is for agency customers. Clients have a dedicated portal that shows only their own projects and deliverables. They cannot see other clients, internal team communications, or any financial data beyond their own invoices.
+
+    **Dashboard landing page:** `/portal/client-dashboard`
+
+    **Navigation sections:**
+
+    - **Client Portal** — Project Hub, Proof Review, Billing, Asset Vault
+    - **Platform** — Chat Hub, Global Search, Settings
+
+    **Typical responsibilities:**
+
+    - Monitor active project milestones and overall progress in **Project Hub**
+    - Review and approve or request changes on submitted proofs in **Proof Review**
+    - View invoices and payment history in **Billing**
+    - Download finalized deliverables from **Asset Vault**
+    - Communicate with the agency team via **Chat Hub** (client-shared channels only)
+
+    <Note>
+      Client accounts can hold one or more `serviceSubscriptions` (web, branding, photography, social media, video, or business development). Each subscription is linked to a specific project inside the platform.
+    </Note>
+  </Tab>
+</Tabs>
+
+## User status values
+
+Every Zenn OS account has a `status` field that reflects the current state of that user's access:
+
+| Status | Meaning |
+|---|---|
+| `active` | Full access to all sections permitted by their role |
+| `limited` | Account is active but access to certain features has been restricted by an admin |
+| `ooo` | User is marked as out of office; tasks may be redistributed or paused |
+| `blacklisted` | Account access has been revoked; the user cannot log in |
+
+<Warning>
+  Only admins can change a user's status. If your access appears restricted, contact your agency admin.
+</Warning>
+
+## Reliability score
+
+Employees and affiliates have an optional `reliabilityScore` between 0 and 100. This score reflects historical on-time delivery across milestones and is visible to admins in the **Personnel Directory**. It is not shown to the employee or affiliate themselves in the current version of Zenn OS.
+
+A higher score indicates consistent, on-time milestone completion. A lower score may trigger more frequent nudges from the **Nudge Logic** system or affect task assignment priority.

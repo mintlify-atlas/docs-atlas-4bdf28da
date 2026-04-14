@@ -1,0 +1,142 @@
+---
+title: "Contracts, IP management, and permission matrix"
+description: "Draft, send, and track five contract types through a full execution lifecycle, and configure role-based access control across the entire platform."
+---
+
+Legal and access control live in two places in the Admin Control Center: the **IP & Contract Vault**, which manages every agreement between the agency and its clients or contractors, and the **Permission Matrix**, which defines what each role can see and do across all of Zenn OS. Together they give you the compliance and access governance you need as the agency scales.
+
+<CardGroup cols={2}>
+  <Card title="IP & Contract Vault" icon="shield">
+    Create, send, track, and export all contracts across five types and a five-stage lifecycle.
+  </Card>
+  <Card title="Contract templates" icon="book-open">
+    Pre-written, editable templates for MSA, NDA, SOW, IP Transfer, and Contractor agreements.
+  </Card>
+  <Card title="Permission Matrix" icon="grid-2">
+    Role-based access control table covering finance, projects, CRM, and system permissions.
+  </Card>
+  <Card title="Legal Docs tab" icon="file-shield">
+    Filtered view of NDAs, MSAs, and IP Transfer deeds with inline view and edit capabilities.
+  </Card>
+</CardGroup>
+
+## IP & Contract Vault
+
+Navigate to the Contract Vault at `/admin/contracts`. The page opens on the **All Contracts** tab and shows four KPI cards: total contracts, executed count, draft count, and IP transfer count.
+
+### Contract types
+
+<AccordionGroup>
+  <Accordion title="MSA — Master Service Agreement">
+    Governs the overall client relationship, including scope, payment terms, IP ownership, confidentiality, and termination. Send an MSA before any project work begins with a new client. All creative deliverables remain the property of Zenn Studios until full payment is received and an IP Transfer Deed is executed.
+  </Accordion>
+  <Accordion title="NDA — Non-Disclosure Agreement">
+    Mutual confidentiality protection for both parties. Covers business plans, pricing, client lists, trade secrets, and creative assets. The NDA is effective for three years from the execution date and includes standard exceptions for publicly known information.
+  </Accordion>
+  <Accordion title="IP Transfer Deed">
+    Irrevocably transfers copyright and all related intellectual property to the client upon full payment. This document is the formal handoff of ownership — it should only be executed after the final invoice is marked `paid`. The deed includes a warranty that the work is original and does not infringe third-party rights.
+  </Accordion>
+  <Accordion title="Contractor Agreement">
+    Terms for freelancer and affiliate engagements. Establishes independent contractor status (no employment relationship), compensation terms, a work-made-for-hire clause, a confidentiality obligation, and a 12-month non-solicitation restriction on the agency's clients.
+  </Accordion>
+  <Accordion title="SOW — Statement of Work">
+    Detailed deliverables, timeline, and payment schedule for a specific project. Includes the milestone breakdown, a standard 30/40/30 payment structure, a two-round revision policy, client responsibilities, and the five-business-day approval window for submitted proofs.
+  </Accordion>
+</AccordionGroup>
+
+### Contract lifecycle
+
+Every contract moves through five statuses:
+
+```
+draft → sent → viewed → partially_signed → executed
+```
+
+| Status | What it means |
+|---|---|
+| `draft` | Created but not yet delivered to the recipient |
+| `sent` | Delivered to the recipient's email or portal |
+| `viewed` | Recipient has opened the document |
+| `partially_signed` | One party has signed; awaiting the other |
+| `executed` | All parties have signed; contract is legally binding |
+
+The status badge on each contract row updates as signatures come in. Contracts expiring within 90 days show an **Expiring** pill next to their status.
+
+### Contract fields
+
+<AccordionGroup>
+  <Accordion title="Core fields">
+    | Field | Type | Description |
+    |---|---|---|
+    | `id` | `string` | Unique identifier (e.g., `con_001`) |
+    | `type` | `ContractType` | One of `msa`, `nda`, `ip_transfer`, `contractor`, `sow` |
+    | `recipientId` | `string?` | User ID of the client or contractor |
+    | `recipientName` | `string` | Display name for the contract header |
+    | `projectId` | `string?` | Linked project (optional) |
+    | `projectName` | `string?` | Display name of the linked project |
+    | `status` | `ContractStatus` | Current lifecycle stage |
+  </Accordion>
+  <Accordion title="Date fields">
+    | Field | Type | Description |
+    |---|---|---|
+    | `createdAt` | `string?` | ISO date the contract was drafted |
+    | `sentAt` | `string?` | ISO date the contract was delivered |
+    | `executedAt` | `string?` | ISO date all parties signed |
+    | `expiresAt` | `string?` | Optional expiry date (common for NDAs) |
+  </Accordion>
+</AccordionGroup>
+
+### Creating and sending contracts
+
+Click **New Contract** to open the creation modal. Select the contract type, enter the recipient's name, optionally link a project, and optionally set an expiry date. Click **Create Draft** — the contract is created with `status: 'draft'` and appears in the contract list.
+
+From the contract detail panel you can:
+
+- Click **View Document** to open the pre-filled template in a full-screen reader
+- Click **Edit** in the document viewer to modify the template text before sending
+- Click **Send for Signature** (available on `draft` contracts) to deliver it to the recipient
+- Click **Resend** (available on `sent` or `viewed` contracts) if the recipient has not responded
+- Click **Download PDF** to export the document for offline use
+
+Use **Export All** in the page header to download a CSV of all contracts with their IDs, types, recipients, projects, statuses, and dates.
+
+### Templates tab
+
+The **Templates** tab shows all five contract types as preview cards. Click **Preview** to read the full template text with placeholder tokens still visible (e.g., `[CLIENT_NAME]`, `[DATE]`). Click **Use Template** to open the creation modal pre-selected with that contract type.
+
+### Legal Docs tab
+
+The **Legal Docs** tab filters to NDAs, MSAs, and IP Transfer deeds — the three document types most relevant to legal compliance. Each card shows the document type, recipient, linked project, and current status. You can view or edit any document inline from this tab.
+
+<Warning>
+All creative deliverables remain the property of Zenn Studios until full payment is received **and** an IP Transfer Deed is executed. Do not execute the IP Transfer Deed before the final invoice is marked `paid` in the Financial Ledger.
+</Warning>
+
+## Permission Matrix
+
+Navigate to the Permission Matrix at `/admin/permissions`. The matrix is a table where rows are individual permissions (grouped by category) and columns are the four roles: `admin`, `employee`, `affiliate`, and `client`.
+
+### Permission categories
+
+| Category | Permissions it covers |
+|---|---|
+| **Finance** | View ledger, edit transactions, run payout allocator, view own payout |
+| **Projects** | Create projects, assign team, view all/own projects, submit proof, approve milestones |
+| **CRM** | View client directory, manage lead pipeline, view own workspace, approve deliverables |
+| **System** | Manage users, send nudges, view audit log, access vault, manage contracts |
+
+### Default access by role
+
+Admins always have full access to every permission and cannot be restricted. The matrix is locked for the admin column.
+
+Employees and affiliates share several project permissions but affiliates cannot view the full client directory or manage leads. Clients have a restricted set focused on their own workspace and deliverable approval.
+
+### Editing permissions
+
+Click **Edit Permissions** in the page header to enter edit mode. In edit mode, each non-admin cell becomes clickable. Click a cell to toggle the permission on or off for that role. A colored checkmark indicates the permission is granted; an empty cell indicates it is not.
+
+Click **Save Changes** when finished. Click **Reset** to revert to the system defaults without saving.
+
+<Info>
+Permissions are enforced server-side in production. Changes in the matrix take effect for all users of that role immediately. Admin access cannot be revoked regardless of matrix settings.
+</Info>

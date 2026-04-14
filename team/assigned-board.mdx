@@ -1,0 +1,57 @@
+---
+title: "My Projects board: assigned work and milestones"
+description: "View all projects assigned to you, track milestone health, manage your calendar, and navigate your active workload as a team member."
+---
+
+The **My Projects** board is the home screen for employees and affiliates in Zenn OS. It surfaces every active project where you are listed as a team member, giving you a single place to check status, review your milestones, and act on overdue items without navigating to the admin layer.
+
+<CardGroup cols={2}>
+  <Card title="Assigned board" icon="folder-open" href="/team/assigned-board">
+    Browse all active projects where you appear in the assigned team. See health status, progress, and pending milestones at a glance.
+  </Card>
+  <Card title="Milestone Updates" icon="calendar" href="/team/milestones-submissions">
+    A personal calendar view scoped to your milestones and meetings. Deadline dates from every assigned milestone populate automatically.
+  </Card>
+  <Card title="Milestone Update" icon="activity" href="/team/milestones-submissions">
+    Log progress and broadcast status updates on your active milestones directly from your work area.
+  </Card>
+  <Card title="Proof Submission" icon="upload" href="/team/milestones-submissions">
+    Upload deliverable files as proof against a milestone and queue them for lead PM or client review.
+  </Card>
+</CardGroup>
+
+## Viewing your assigned projects
+
+When you open **My Projects**, Zenn OS queries all projects where your user ID appears in the `assignedTeam` array and filters them to `status: active`. Each project card displays:
+
+- **Project name** and client name
+- **Project type** (e.g. `web`, `video`, `branding`)
+- **Health status** — `green`, `amber`, or `red`, reflected as the card's accent color
+- **Completion percentage** — a progress bar driven by the project's `completionPercent` value
+- **Your milestones** — only the milestones where your user ID is in the milestone's `assignedTo` array are shown inline
+
+From any project card you can click **Submit Proof** on an `in_progress` milestone to jump directly to the Proof Submission screen, or click **Vault** to open that project's asset vault.
+
+<Note>
+  The board only displays projects where your user ID is included in the project's `assignedTeam` array. If you expect to see a project but it is missing, ask your project manager to confirm your assignment.
+</Note>
+
+## Action required panel
+
+The sidebar on the right of the board highlights items that need your immediate attention, such as milestones that have gone more than five days without a progress update. Click **Update Now** in any action card to navigate directly to the **Milestone Update** screen.
+
+## My Calendar
+
+The **My Calendar** view at `/team/calendar` renders a personal timeline scoped exclusively to your work. Milestone start dates and end dates from every project in your `assignedTeam` appear as deadline markers. Scheduled meetings and internal events relevant to your projects are also surfaced here.
+
+Use the calendar alongside the board to plan your week — a milestone's `endDate` in the calendar corresponds to the same field in the `Milestone` object, so dates always stay in sync with the project data.
+
+## Filtering and sorting projects
+
+On the assigned board you can narrow and reorder your project list using the filter controls above the card grid:
+
+- **Filter by status** — choose `all`, `on_track`, `at_risk`, or `overdue` to isolate projects by health signal
+- **Sort by** — order by project name, completion percentage, or nearest deadline
+- **Search** — type a project or client name to instantly filter the visible cards
+
+Filters only apply within projects already scoped to your assignments; you cannot use them to view projects outside your `assignedTeam`.

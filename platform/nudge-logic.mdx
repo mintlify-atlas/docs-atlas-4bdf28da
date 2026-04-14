@@ -1,0 +1,91 @@
+---
+title: "Nudge Logic: three-level escalation reminders"
+description: "Nudge Logic is the admin-only escalation engine in Zenn OS — send tiered, automated reminders to keep talent and clients on track."
+---
+
+Nudge Logic is an admin-only tool that lets you send structured, escalating reminders to team members and clients without manually drafting follow-up messages each time. It uses a three-level escalation system — each level carries a firmer tone than the last — and tracks the full lifecycle of every nudge from scheduling through to response or escalation. The **Nudge Logic** item in the sidebar shows a live badge (currently `3`) reflecting the number of pending nudges awaiting a response.
+
+## Trigger types
+
+Every nudge has a trigger type that sets the context of the message and determines the pre-written message template used at each escalation level.
+
+<AccordionGroup>
+  <Accordion title="talent_reminder">
+    Use `talent_reminder` when a team member (employee or affiliate) has not updated their milestone progress within an expected window. The system addresses the recipient by name and references the specific project, prompting them to log their status.
+
+    Example Level 1 message: *"Hey [Name], just checking in on your progress for [Project]. Let us know how it's going!"*
+
+    Escalating to Level 3 marks the situation as blocking client delivery and triggers an urgent flag in the admin dashboard.
+  </Accordion>
+  <Accordion title="client_approval">
+    Use `client_approval` when a client has not reviewed or approved a submitted proof or deliverable. The nudge references the project name and prompts the client to complete their review so the team can proceed to the next milestone.
+
+    Example Level 1 message: *"Hi [Name], your deliverable for [Project] is ready for your review whenever you have a moment."*
+
+    If the client does not respond after Level 2, escalating to Level 3 sends a final reminder flagging that the timeline is at risk.
+  </Accordion>
+  <Accordion title="payment_chaser">
+    Use `payment_chaser` when a client has an overdue invoice linked to a project. The nudge references the outstanding payment and prompts the client to arrange settlement.
+
+    Example Level 1 message: *"Hi [Name], just a friendly reminder that an invoice for [Project] is due."*
+
+    At Level 3, the message is marked urgent and instructs the client to contact the agency immediately.
+  </Accordion>
+  <Accordion title="custom">
+    Use `custom` when none of the standard trigger types fit the situation. Select `custom` from the trigger type dropdown and write your own message in the **Custom Message** field. Custom nudges follow the same three-level escalation structure and status lifecycle as automated nudges.
+  </Accordion>
+</AccordionGroup>
+
+## Escalation levels
+
+Each nudge is assigned a level (1, 2, or 3) that controls the tone of the outgoing message.
+
+| Level | Label | Tone |
+|-------|-------|------|
+| `1` | Friendly | A soft check-in with no pressure. Suitable as a first contact. |
+| `2` | Firm | A direct follow-up that mentions the approaching deadline and conveys urgency. |
+| `3` | Escalation | A final warning. The nudge is flagged in the admin dashboard and the message tone reflects the severity of the situation. |
+
+You can escalate an active nudge from Level 1 or 2 by clicking **Escalate** on the nudge card in the **Active Nudges** panel. Level 3 nudges cannot be escalated further.
+
+## Status lifecycle
+
+A nudge moves through the following statuses from the moment it is created to the moment it is resolved.
+
+```
+scheduled → sent → delivered → responded
+                             → escalated
+```
+
+- **scheduled** — the nudge has been composed and queued but not yet delivered. You can click **Send Now** on a scheduled nudge to dispatch it immediately.
+- **sent** — the nudge has been dispatched and is awaiting delivery confirmation.
+- **delivered** — delivery has been confirmed. The nudge is now waiting for a response from the recipient.
+- **responded** — the recipient has acknowledged or acted on the nudge. The thread is considered resolved.
+- **escalated** — the recipient did not respond and the nudge was promoted to a higher level, or the Level 3 nudge has been flagged for admin review.
+
+## Creating a nudge
+
+<Steps>
+  <Step title="Open the compose panel">
+    Click **New Nudge** in the top-right corner of the Nudge Logic page. A slide-over panel appears on the right side of the screen.
+  </Step>
+  <Step title="Select an escalation level">
+    Choose **L1**, **L2**, or **L3** depending on the urgency. For a first-contact reminder, start at Level 1. Reserve Level 3 for situations that are already blocking delivery or payment.
+  </Step>
+  <Step title="Choose a trigger type">
+    Select one of `talent_reminder`, `client_approval`, `payment_chaser`, or `custom` from the **Trigger Type** dropdown. The system loads the appropriate message template.
+  </Step>
+  <Step title="Select a recipient and project">
+    Pick the recipient from the **Recipient** dropdown (all non-admin users are listed) and link the nudge to a project from the **Related Project** dropdown. Both fields are required before you can send.
+  </Step>
+  <Step title="Review the message preview">
+    The **Message Preview** area populates automatically with the template for the selected trigger type and level, with the recipient name and project name filled in. For `custom` nudges, write your message in the **Custom Message** field.
+  </Step>
+  <Step title="Send the nudge">
+    Click **Send Nudge**. The nudge moves to `sent` status and appears in the **Active Nudges** panel on the main Nudge Logic page.
+  </Step>
+</Steps>
+
+<Warning>
+  Nudge Logic is only accessible to users with the `admin` role. If you do not see **Nudge Logic** in your sidebar, your account does not have admin access.
+</Warning>

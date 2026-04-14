@@ -1,0 +1,93 @@
+---
+title: "Global Search and Settings: platform utilities"
+description: "Global Search lets every Zenn OS role find records instantly, while Settings lets you manage your profile, timezone, and notification preferences."
+---
+
+Zenn OS provides two utility features available to all roles from the **Platform** section of the sidebar: Global Search for finding any record in the system, and Settings for managing your account. Both are accessible regardless of whether you are an admin, employee, affiliate, or client — though the scope of what you can see in search is shaped by your role.
+
+<CardGroup cols={2}>
+  <Card title="Global Search" icon="search">
+    Search across projects, people, contracts, enquiries, quotes, and vault files from a single interface. Results appear instantly as you type and can be filtered by record type.
+  </Card>
+  <Card title="Settings" icon="settings">
+    Manage your profile information, timezone, notification preferences, security settings, appearance, and active sessions from one place.
+  </Card>
+</CardGroup>
+
+## Global Search
+
+Global Search is accessible to all roles via the **Global Search** item in the sidebar. It lets you find any record in the platform without navigating through individual sections.
+
+### What you can search
+
+The search index covers the following record types:
+
+| Type | What it matches |
+|------|----------------|
+| **Project** | Project name, client name, project type |
+| **Person** | Name, title, email, skills |
+| **Contract** | Contract type, recipient name, project name |
+| **Enquiry** | Contact name, email, company, project type |
+| **Quote** | Quote title, client name |
+| **File** | File name, vault location |
+
+Type any query into the search bar and results appear immediately. When multiple record types match, use the type filter buttons — for example, **Person** or **Project** — to narrow the list down to a specific category.
+
+### Role-scoped search results
+
+The breadth of search results depends on your role.
+
+- **Admin, employee, and affiliate** — you can search across all record types: projects, personnel, contracts, enquiries, quotes, and vault files.
+- **Client** — search results are scoped to your own data. You will only see records related to your own projects, your own contacts, and files that have been marked as client-visible.
+
+<Info>
+  The search page also displays a **Recent** panel and a **Quick Navigate** panel when the search bar is empty. Use Quick Navigate shortcuts to jump directly to common sections like **New Project** or **Inquiry Inbox**.
+</Info>
+
+## Settings
+
+The **Settings** page is available to all roles and is divided into five tabs: Profile, Notifications, Security, Appearance, and Sessions. Navigate between them using the sidebar on the left of the settings layout.
+
+### Profile
+
+The **Profile** tab lets you update the personal information tied to your `OSUser` account.
+
+| Field | Description |
+|-------|-------------|
+| **Full Name** | Your display name shown across the platform and in chat. |
+| **Title / Role description** | A short description of your function, for example `Senior Video Editor`. |
+| **Timezone** | Your local timezone, used to localize timestamps and calendar events. |
+| **Bio** | An optional short bio visible to other team members. |
+| **Avatar** | Upload a photo (JPG, PNG, or WebP, max 2 MB) to replace the default initial avatar. |
+
+Your email address is read-only in the profile tab. Contact your agency admin to change it.
+
+### Notifications
+
+The **Notifications** tab lets you control how and when Zenn OS contacts you. You can toggle individual notification types across three delivery channels:
+
+- **Email** — nudge alerts, milestone updates, invoice and payment notices, and chat digests.
+- **Push** — nudge triggers, new chat messages, proof submissions, and system announcements.
+- **SMS** — urgent escalations only (off by default).
+
+You can also set your **Email Digest Frequency** to `realtime`, `daily`, or `weekly`.
+
+### Security
+
+The **Security** tab lets you change your password and enable two-factor authentication (2FA). Enabling 2FA requires a TOTP code on every login; a QR code is sent to your email on the next sign-in. The **Danger Zone** section lets you sign out of all devices or submit a request for account deletion.
+
+### Appearance
+
+The **Appearance** tab lets you customize the visual experience of Zenn OS:
+
+- **Theme** — choose between OLED Black, Dark, or System.
+- **Accent color** — pick from six preset colors including the default Zenn Red.
+- **Font family** — switch between Inter, Outfit, Roboto, or JetBrains Mono.
+- **UI density** — compact, default, or comfortable.
+- **Animations** — toggle motion on or off for reduced-motion accessibility.
+
+Click **Apply Settings** to write your changes to the interface immediately.
+
+### Sessions
+
+The **Sessions** tab lists all devices currently signed into your account, including the browser, approximate location, and last-active time. Click **Revoke** next to any non-current session to sign it out remotely.

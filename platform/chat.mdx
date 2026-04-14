@@ -1,0 +1,57 @@
+---
+title: "Chat Hub: role-scoped team and client messaging"
+description: "Chat Hub gives every Zenn OS role a communication space — with four channel types controlling exactly who can see each conversation."
+---
+
+Chat Hub is the built-in messaging layer for Zenn OS. Every role — admin, employee, affiliate, and client — has access to it, but the channels each person sees depend on their role. Agency conversations stay internal, client channels stay project-focused, and one-on-one threads are available to any two users. The sidebar displays an unread badge on the **Chat Hub** nav item whenever you have unread messages in any of your channels.
+
+## Channel types
+
+Zenn OS organizes messages into four channel types. Each type controls who has access and what the channel is used for.
+
+<Tabs>
+  <Tab title="client_shared">
+    **Who can access:** admin, employee, affiliate, and client
+
+    A `client_shared` channel is linked to a specific project and is visible to both the agency team and the client assigned to that project. Use these channels to share updates, request approvals, and exchange feedback directly with clients. The channel name and messages are visible to the client at all times.
+
+    Each `client_shared` channel can be associated with a `projectId`, keeping conversations scoped to a single engagement.
+  </Tab>
+  <Tab title="agency_internal">
+    **Who can access:** admin, employee, and affiliate (clients excluded)
+
+    An `agency_internal` channel is visible only to agency team members. Use these channels for production discussions, internal briefings, and conversations you do not want clients to see. Clients cannot view, join, or access `agency_internal` channels under any circumstances.
+  </Tab>
+  <Tab title="executive_only">
+    **Who can access:** admin only
+
+    An `executive_only` channel is restricted to users with the `admin` role. These channels are used for leadership-level strategy, financial discussions, or sensitive operational decisions. The channel header displays an **EXEC ONLY** label as a visual indicator of the restricted access level.
+  </Tab>
+  <Tab title="direct">
+    **Who can access:** any two users
+
+    A `direct` channel is a private one-on-one thread between any two users in the platform, regardless of role. Direct channels do not have a project link and are not visible to anyone outside the two participants.
+  </Tab>
+</Tabs>
+
+<Note>
+  Clients can only see `client_shared` and `direct` channels. They cannot access `agency_internal` or `executive_only` channels, even if they are listed as project members.
+</Note>
+
+## Message features
+
+Each message in Chat Hub supports several features that help you prioritize and act on conversations.
+
+**Pinned messages** — Any message with `isPinned` set to `true` is marked as a pinned item in the channel. Use pinned messages to surface key decisions, deliverable links, or reference material that the team needs to find quickly.
+
+**Action required flag** — When a message has `isActionRequired` set to `true`, it displays a prominent **Action Required** prompt to recipients. This flag is designed for messages that need an explicit response — such as approval requests, sign-offs, or time-sensitive decisions. Flagged messages show a **Respond** button below the message body.
+
+**Attachments** — Messages can carry file attachments with a `name`, `type`, and `url`. Use the attachment icon in the message composer to send files, images, or documents directly in a channel thread.
+
+## Creating a new channel
+
+Click the **+** button in the Chat Hub sidebar header to open the **New Thread** panel. Enter a thread name (lowercase, hyphen-separated), select a type — either `agency_internal` or `client_shared` — then add members from the user list. Click **Create Thread** to open the channel immediately.
+
+<Tip>
+  When you create a `client_shared` channel, the member picker automatically filters to include clients. When you create an `agency_internal` channel, clients are excluded from the member list.
+</Tip>

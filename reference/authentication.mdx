@@ -1,0 +1,66 @@
+---
+title: "Authentication and role-based access in Zenn OS"
+description: "How to log in to Zenn OS, how your role is determined from your email, where each role lands after login, and how admins can impersonate other roles."
+---
+
+Zenn OS uses a single login screen for all users. Your email address determines your role automatically — there is no separate login URL per role and no manual role selection. Once authenticated, you are taken directly to the dashboard that corresponds to your role.
+
+## Logging in
+
+Navigate to `/login` and enter your **Email Address** and **Password**, then click **Enter Ecosystem**. As soon as you tab out of the email field, the system recognises your identity and displays a confirmation banner so you know your access level before you submit.
+
+If no account is found for your email address, you see the error: `No account found for this email address.` Contact your agency admin if you believe you should have access.
+
+## Email-based role detection
+
+Your role in Zenn OS is tied to your email address. When you enter your email on the login screen, the system looks it up against the registered user list and assigns your role automatically. You do not choose your role — it is configured by your agency admin when your account is created.
+
+The login screen provides a visual cue when your email is recognised:
+
+- **Administrator** — a red-accented banner confirms elevated access is active.
+- **Client** — a neutral banner confirms client portal access.
+- **Employee or affiliate** — a neutral banner confirms production board access.
+
+## Roles and landing pages
+
+There are four roles in Zenn OS. Each role lands on a different page after a successful login.
+
+<AccordionGroup>
+  <Accordion title="Admin — /admin/executive-dashboard">
+    Admins have full system access across finance, projects, personnel, CRM, legal, and settings. After login, admins land on the Executive Dashboard, which provides a real-time view of business performance, KPIs, and active project health.
+  </Accordion>
+  <Accordion title="Employee — /team/assigned-board">
+    Employees are internal agency staff. After login, they land on the Assigned Board, which shows their active project milestones, tasks, and submission queue.
+  </Accordion>
+  <Accordion title="Affiliate — /team/assigned-board">
+    Affiliates are contracted freelancers. They share the same landing page as employees — the Assigned Board — but are scoped to only their own assigned milestones and payout data.
+  </Accordion>
+  <Accordion title="Client — /portal/client-dashboard">
+    Clients have a dedicated portal view. After login, they land on the Client Dashboard, which shows their projects, milestone progress, proof approvals, and billing information.
+  </Accordion>
+</AccordionGroup>
+
+## Account status and access
+
+Your account has a `status` field that affects what you can do, independent of your role.
+
+| Status | Effect |
+|---|---|
+| `active` | Full access for your role. |
+| `limited` | Restricted access — typically applied to accounts that have not completed onboarding. |
+| `ooo` | Out of office. You are temporarily inactive and assignments are paused. |
+| `blacklisted` | Access revoked. You cannot log in or interact with the system. |
+
+If you are unable to log in or find your access unexpectedly restricted, contact your agency admin to review your account status.
+
+## Impersonation (admins only)
+
+Admins can switch the system view to simulate what another role sees without logging out. This is useful for verifying what a client or team member experiences in their own portal.
+
+To start impersonation, use the **View As** control available from the admin interface and select a role — or a specific user within that role. The system enters impersonation mode and renders the interface as that role would see it. An indicator remains visible to confirm you are in impersonation mode.
+
+To return to your normal admin view, stop impersonation using the same control.
+
+<Tip>
+  Use impersonation to verify what a client sees before a project delivery, or to confirm that an affiliate's board is showing the correct milestones. You do not need to create a separate test account.
+</Tip>

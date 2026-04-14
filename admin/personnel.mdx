@@ -1,0 +1,109 @@
+---
+title: "Personnel directory, hiring, and equipment tracker"
+description: "View all team members, track reliability scores and project load, send hire invites, and log agency and personal equipment in one place."
+---
+
+The Personnel Directory gives you a live picture of your entire workforce — who is active, how loaded they are, how reliable they have been, and what skills they bring. The Equipment Tracker sits alongside it to log agency-owned and personal gear, manage check-outs, and flag items in repair or missing.
+
+<CardGroup cols={2}>
+  <Card title="Personnel directory" icon="users">
+    Searchable card grid with role, status, reliability score, load, and skills for every team member.
+  </Card>
+  <Card title="Equipment tracker" icon="package">
+    Asset registry for cameras, computers, lighting, and audio gear with check-out workflow.
+  </Card>
+  <Card title="Quick-Hire Invite" icon="send">
+    Send an onboarding invite link so a new contractor or employee can create their own account.
+  </Card>
+  <Card title="Quick-Call Alert" icon="phone">
+    Dispatch an urgent notification to any team member directly from their profile card.
+  </Card>
+</CardGroup>
+
+## Personnel directory
+
+Navigate to the directory at `/admin/personnel`. The page lists all users with roles `admin`, `employee`, and `affiliate`. Filter by role or status using the pill buttons, or search by name, title, or skill.
+
+Each card shows:
+
+- An avatar with a **burnout ring** — a circular arc that fills green, amber, or red based on the person's `currentLoad` relative to a five-project ceiling
+- Name, title, status dot, and role label
+- Three metric chips: **Reliability**, **Load**, and **Nudges**
+- Up to three skill tags
+
+Clicking a card opens the detail drawer on the right, revealing the full skill list, contact details, timezone, join date, and quick-action buttons.
+
+### User statuses
+
+| Status | Meaning |
+|---|---|
+| `active` | Available and in good standing |
+| `limited` | Restricted access, typically because onboarding is incomplete |
+| `ooo` | Out of office; do not assign new work |
+| `blacklisted` | Removed from active duty; retained in system for records |
+
+### Reliability score
+
+The `reliabilityScore` field is a number from `0` to `100`. A higher score means the person consistently delivers on time without requiring nudges. The score is inversely related to `nudgeCount` — team members with a `nudgeCount` above 5 trigger a **High Maintenance** warning in the detail drawer, prompting you to discuss workflow expectations.
+
+Use the reliability score when deciding who to assign to time-sensitive milestones. You can filter and sort by role or status but not directly by reliability score from the UI — open individual cards to compare.
+
+<Note>
+Reliability scores and nudge counts are informational. Zenn OS does not automatically block assignment based on these values; the judgment call stays with you.
+</Note>
+
+### Skills and project load
+
+The `skills` array lists self-reported competencies (e.g., `'Color Grading'`, `'Figma'`, `'Pro Tools'`). You can search the directory by skill name to find the right person for a specific task.
+
+`currentLoad` is the number of active projects a person is currently assigned to. The burnout ring turns amber when the load exceeds 50% of the five-project ceiling (more than 2 active projects) and red when it exceeds 80% (more than 4 active projects). When assigning a team member to a new project, the New Project modal's **Team** step displays each person's current load to help you avoid over-committing anyone.
+
+### Quick-Hire Invite
+
+Click **Quick-Hire Invite** to open the hire modal. Fill in the person's name, email, role (`employee` or `affiliate`), title, and skills. Submitting sends an onboarding invite link. Once the person completes onboarding, they appear in the directory with `isOnboarded: true` and `status: 'active'`.
+
+### Quick-Call Alert
+
+From a team member's detail drawer, click **Send Quick-Call Alert** to open a modal where you type a reason for the call and dispatch it. The alert appears immediately in the recipient's notification feed. This is the fastest escalation path short of picking up the phone.
+
+## Equipment Tracker
+
+Navigate to the Equipment Tracker at `/admin/equipment`. The page shows a KPI strip (total assets, agency-owned count, checked-out count, total insured value) and a filterable card grid.
+
+### Equipment fields
+
+<AccordionGroup>
+  <Accordion title="Type">
+    Each item is categorized as one of: `camera`, `lens`, `lighting`, `audio`, `computer`, `storage`, or `other`. The type determines the icon displayed on the card.
+  </Accordion>
+  <Accordion title="Status">
+    | Status | Meaning |
+    |---|---|
+    | `available` | In the office; ready to check out |
+    | `checked_out` | With a team member for a project |
+    | `in_repair` | At a service center; not available |
+    | `missing` | Cannot be located; needs investigation |
+
+    Filter the grid by status using the pill buttons at the top of the page.
+  </Accordion>
+  <Accordion title="Condition">
+    | Condition | Color |
+    |---|---|
+    | `excellent` | Green |
+    | `good` | Blue |
+    | `fair` | Amber |
+    | `needs_repair` | Red |
+  </Accordion>
+  <Accordion title="Owner">
+    `owner` is either `'agency'` (the item belongs to Zenn Studios) or a user ID (the item is personal gear brought in by a team member). Personal gear is tracked alongside agency gear so you have a complete inventory for shoots.
+  </Accordion>
+  <Accordion title="Checkout fields">
+    When an item is checked out, three additional fields populate: `checkedOutTo` (the user ID of the person holding the item), `checkedOutProject` (the project it is being used on), and `expectedReturn` (the date by which it should be back).
+  </Accordion>
+</AccordionGroup>
+
+### Adding and editing equipment
+
+Click **Add Equipment** to open the equipment modal. Provide the item name, type, status, condition, value, serial number, and purchase date. New items added manually are marked `isVerified: false` until you confirm their details — a warning triangle appears on unverified cards.
+
+Click an existing card to select it, then click **Edit** to update its fields, or **Delete** to remove it from the registry.

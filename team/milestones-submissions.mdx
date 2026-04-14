@@ -1,0 +1,72 @@
+---
+title: "Milestone updates and proof submission workflow"
+description: "Log progress on assigned milestones, move work through the status lifecycle, and upload versioned deliverable files as proof for client or PM review."
+---
+
+Two tools power the delivery side of your work in Zenn OS: **Milestone Update** for logging progress, and **Proof Submission** for uploading the actual deliverable files. Together they give the agency a live picture of where every piece of work stands and create a paper trail of every asset you hand off.
+
+## Milestone Update
+
+Navigate to **Milestone Update** at `/team/milestone-update` to report progress on any milestone currently assigned to you. Select the project and milestone from the dropdown, then choose a status signal — **On Track**, **At Risk**, **Blocked**, or **Ready for Review** — and enter a free-text update in the details field. Click **Broadcast Update** to save the entry.
+
+Progress on a milestone is expressed as a number from `0` to `100`. You update this percentage each time you broadcast, and it flows back into the parent project's `completionPercent` calculation visible on the assigned board.
+
+### Milestone status lifecycle
+
+From your perspective as a team member, a milestone moves through the following states:
+
+| Status | What it means |
+|--------|--------------|
+| `locked` | Upstream dependencies have not been completed. You cannot start work. |
+| `unlocked` | Dependencies are cleared. The milestone is open for work. |
+| `in_progress` | You have begun work and are logging progress updates. |
+| `submitted` | You have uploaded proof and submitted the milestone for review. |
+| `approved` | A lead PM or admin has accepted the deliverable. |
+| `overdue` | The `endDate` has passed and the milestone is not yet `submitted` or `approved`. |
+
+<Note>
+  Each milestone can carry an optional `payout` value. Your payout is released only when the milestone reaches `approved` status. Submitting proof alone (`submitted`) does not trigger a payout — approval by a lead PM or admin is required.
+</Note>
+
+A milestone with status `locked` renders as greyed out on your assigned board and cannot be updated. Wait for the blocking milestones listed in the `dependencies` array to reach `approved` before you can start work.
+
+## Proof Submission
+
+The **Proof Submission** screen at `/team/submission` is where you attach the actual deliverable files to a milestone. Uploading a file here sets the `isSubmittedAsProof` flag to `true` on the resulting `VaultAsset` record and records the submitted version in `proofVersion`.
+
+### Supported asset types
+
+You can submit files of the following types:
+
+- `video` — MP4, MOV, and other video formats
+- `image` — JPG, PNG, and other still images
+- `document` — PDF and other document files
+- `audio` — WAV, MP3, and other audio files
+- `archive` — ZIP and other compressed bundles
+- `design` — design source files
+
+The upload interface accepts any file up to 5 GB via drag-and-drop or the file picker.
+
+### Submitting proof
+
+<Steps>
+  <Step title="Attach your file">
+    Drag your deliverable onto the upload zone or click to open the file picker. The system accepts MP4, MOV, PDF, JPG, PNG, and other supported formats up to 5 GB.
+  </Step>
+  <Step title="Link to a milestone">
+    Use the **Link to Project Milestone** dropdown to associate the file with the correct milestone. Only milestones where you are in the `assignedTo` array and with status `in_progress` or `unlocked` are listed.
+  </Step>
+  <Step title="Add version notes">
+    Enter a short description of what changed in this version — for example, "Addressed color grading contrast issues from round-one feedback." These notes are stored alongside the asset and visible to reviewers.
+  </Step>
+  <Step title="Set approval requirement">
+    Check **Require Lead PM Approval before client release** if the file should not be shared with the client until a project manager signs off. Leave it unchecked to make the asset immediately `client_visible` on approval.
+  </Step>
+  <Step title="Submit the deliverable">
+    Click **Submit Deliverable**. The file is stored in the project vault, the milestone status advances to `submitted`, and the lead PM is notified for review.
+  </Step>
+</Steps>
+
+### Asset versioning
+
+Every file you upload creates a new entry in the `versions` array on the `VaultAsset` record, with its own `version` string, `uploadedAt` timestamp, and `url`. You can upload multiple versions of the same deliverable — for example `v1`, `v2`, and `v3` of a hero video export — and reviewers can compare or reference any previous version at any time. The `proofVersion` field on the asset records which version was flagged as the formal proof submission.

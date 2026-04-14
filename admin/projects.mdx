@@ -1,0 +1,121 @@
+---
+title: "Projects: milestones, dependencies, and timeline"
+description: "Create and manage client projects with milestone tracking, dependency mapping, health status, and a Gantt-style timeline — all in one place."
+---
+
+The Projects page is the operational hub for everything a project touches: scope, schedule, team, and money. You create a project through a four-step guided modal, then manage its milestones inline or through the Dependency Architect for visual dependency mapping. The Master Calendar overlays all project timelines so you can spot scheduling conflicts before they become problems.
+
+<CardGroup cols={2}>
+  <Card title="Project list" icon="folder-open">
+    Filterable grid, list, and Gantt timeline views of every project in the system.
+  </Card>
+  <Card title="Milestone tracker" icon="list-check">
+    Inline status advancement through a locked → approved lifecycle per phase.
+  </Card>
+  <Card title="Dependency Architect" icon="git-branch">
+    Visual graph for mapping which milestones must complete before others unlock.
+  </Card>
+  <Card title="Master Calendar" icon="calendar-days">
+    Gantt-style timeline view showing all projects and milestone markers on one axis.
+  </Card>
+</CardGroup>
+
+## Project list and filters
+
+The project list supports three view modes, toggled from the top-right of the page:
+
+- **Grid** — card-per-project layout, default view
+- **List** — compact table with sortable columns for project name, client, health, progress, and value
+- **Timeline** — Gantt-style chart plotting each project's start and end date with milestone markers
+
+Filter projects by status using the pill buttons below the search bar:
+
+| Status | Meaning |
+|---|---|
+| `active` | Currently in progress |
+| `awaiting_approval` | Waiting for client sign-off to proceed |
+| `on_hold` | Paused; no active work |
+| `completed` | All milestones approved |
+| `archived` | Closed; removed from active views |
+
+You can also search by project name or client name using the search input.
+
+## Project fields
+
+Each project card or list row surfaces the key fields:
+
+- **name** — the project title as it appears to the team and client
+- **clientId / clientName** — the linked client account
+- **type** — one of `web`, `video`, `branding`, `social`, or `full_brand`
+- **healthStatus** — `green` (on track), `amber` (at risk), or `red` (critical); editable from the detail panel
+- **completionPercent** — derived from approved milestones as a share of total milestones
+- **totalValue / paidToDate** — contract value and how much has been collected
+
+Opening any project card reveals the detail panel on the right side of the screen, where you can update the health status, edit the paid-to-date figure, add milestones, and navigate to related tools (Vault, Ledger, Nudge, Contracts, Quotation).
+
+## Milestone tracking
+
+Every project is divided into phases called milestones. Each milestone moves through a strict status lifecycle:
+
+```
+locked → unlocked → in_progress → submitted → approved
+                                             ↓
+                                           overdue  (if past endDate)
+```
+
+**Status descriptions:**
+
+| Status | What it means |
+|---|---|
+| `locked` | Dependency not yet complete; cannot be started |
+| `unlocked` | Dependency met; team member can begin work |
+| `in_progress` | Actively being worked on |
+| `submitted` | Deliverable uploaded and awaiting review |
+| `approved` | Client or admin has accepted the deliverable |
+| `overdue` | Past the `endDate` without reaching `approved` |
+
+You advance a milestone to the next status by clicking the arrow button on the milestone row in the detail panel. The first milestone in a new project is automatically set to `unlocked`; all subsequent milestones start as `locked` until their dependency clears.
+
+Each milestone also carries:
+
+- **assignedTo** — one or more user IDs from the project team
+- **payout** — the amount owed to the assigned team member(s) upon approval
+- **isClientVisible** — controls whether the milestone appears in the client portal
+- **dependencies** — IDs of other milestones that must reach `approved` before this one unlocks
+
+<Note>
+Payout amounts set on milestones feed directly into the Payout Allocator. Approve a milestone and the corresponding amount becomes available for disbursement.
+</Note>
+
+## Creating a new project
+
+Click **New Project** in the top-right corner. The modal walks you through four steps:
+
+<Steps>
+  <Step title="Basics">
+    Enter the project name, client name, service type (`web`, `video`, `branding`, `social`, or `full_brand`), total contract value, start and end dates, and an optional high-level brief. Name and client name are required; you cannot proceed without them.
+  </Step>
+  <Step title="Milestones">
+    Add one or more phases. For each milestone, set the phase name, due date, payout amount, client visibility, and which team members are assigned. The first milestone is automatically unlocked; all others default to locked with the previous milestone as their dependency.
+  </Step>
+  <Step title="Team">
+    Select all team members who need access to this project. The selector shows each member's current project load so you can avoid overloading anyone. The admin account is included by default.
+  </Step>
+  <Step title="Contracts">
+    Optionally attach contract templates to this project. Selected templates are created as `draft` contracts in the IP & Contracts vault, ready to customize and send. Available templates: MSA, NDA, SOW, IP Transfer.
+  </Step>
+</Steps>
+
+When you click **Create Project**, the project appears immediately in the list with `status: 'active'`, `healthStatus: 'green'`, and `completionPercent: 0`.
+
+## Dependency Architect
+
+The Dependency Architect at `/admin/dependency` provides a visual graph view of milestone dependencies across a selected project. Each milestone appears as a node; arrows show which phases must complete before the next one unlocks. Use this view when you need to communicate schedule logic to a client or when debugging why a milestone is stuck in `locked`.
+
+The Executive Dashboard's Project Health panel links directly to the Dependency Architect with the relevant project pre-selected.
+
+## Master Calendar
+
+The Master Calendar at `/admin/calendar` renders all active projects as Gantt bars on a shared timeline. Each bar is colored by health status (green, amber, or red) and dotted with milestone markers at their due dates. A vertical **Today** line shows where you are in the schedule at a glance.
+
+You can click any project bar to open the project detail panel without leaving the calendar context.

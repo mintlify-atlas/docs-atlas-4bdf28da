@@ -1,0 +1,162 @@
+---
+title: "Build and deploy Zenn OS to Cloudflare Pages"
+description: "How to install dependencies, run Zenn OS locally for development, build for production, and deploy to Cloudflare Pages using Wrangler."
+---
+
+Zenn OS is a Next.js 16 application. To run or deploy it, you need Node.js and a package manager installed on your machine. This page covers the scripts available, the key dependencies you should be aware of, and how to deploy the application to Cloudflare Pages.
+
+## Prerequisites
+
+- Node.js 20 or later
+- A package manager: npm, yarn, pnpm, or bun
+- The Wrangler CLI if you are deploying to Cloudflare Pages (`npm install -g wrangler`)
+
+## Available scripts
+
+Zenn OS ships with four npm scripts defined in `package.json`.
+
+| Script | Command | Purpose |
+|---|---|---|
+| `dev` | `npm run dev` | Starts the local development server with hot reload. |
+| `build` | `npm run build` | Compiles the application for production. |
+| `start` | `npm run start` | Runs the production build locally (requires `build` first). |
+| `lint` | `npm run lint` | Runs ESLint across the codebase. |
+
+## Running locally
+
+Use `npm run dev` (or the equivalent for your package manager) to start the development server.
+
+<CodeGroup>
+
+```bash npm
+npm run dev
+```
+
+```bash yarn
+yarn dev
+```
+
+```bash pnpm
+pnpm dev
+```
+
+```bash bun
+bun dev
+```
+
+</CodeGroup>
+
+The server starts at `http://localhost:3000` by default. Local network access from `192.168.29.133` is also permitted, which allows you to preview on a device connected to the same network.
+
+## Deployment workflow
+
+<Steps>
+  <Step title="Install dependencies">
+    Run the install command for your package manager in the project root.
+
+    <CodeGroup>
+
+    ```bash npm
+    npm install
+    ```
+
+    ```bash yarn
+    yarn install
+    ```
+
+    ```bash pnpm
+    pnpm install
+    ```
+
+    ```bash bun
+    bun install
+    ```
+
+    </CodeGroup>
+  </Step>
+  <Step title="Run the linter">
+    Check for any linting errors before building.
+
+    <CodeGroup>
+
+    ```bash npm
+    npm run lint
+    ```
+
+    ```bash yarn
+    yarn lint
+    ```
+
+    ```bash pnpm
+    pnpm lint
+    ```
+
+    ```bash bun
+    bun lint
+    ```
+
+    </CodeGroup>
+  </Step>
+  <Step title="Build for production">
+    Compile the application. Build output is written to `.vercel/output/static`, which is the directory Wrangler reads for Cloudflare Pages deployment.
+
+    <CodeGroup>
+
+    ```bash npm
+    npm run build
+    ```
+
+    ```bash yarn
+    yarn build
+    ```
+
+    ```bash pnpm
+    pnpm build
+    ```
+
+    ```bash bun
+    bun build
+    ```
+
+    </CodeGroup>
+  </Step>
+  <Step title="Deploy to Cloudflare Pages">
+    Use the Wrangler CLI to publish the built output. The project name is `zenn-os` as defined in `wrangler.toml`.
+
+    ```bash
+    wrangler pages deploy
+    ```
+
+    Wrangler reads the configuration from `wrangler.toml` and uploads the contents of `.vercel/output/static` to Cloudflare Pages.
+  </Step>
+</Steps>
+
+## Key dependencies
+
+| Package | Version | Purpose |
+|---|---|---|
+| `next` | 16.2.3 | Application framework (App Router). |
+| `react` | 19.2.4 | UI rendering library. |
+| `react-dom` | 19.2.4 | DOM bindings for React. |
+| `typescript` | ^5 | Type-safe JavaScript. |
+| `tailwindcss` | ^4 | Utility-first CSS framework. |
+| `framer-motion` | ^12 | Animation library used throughout the UI. |
+| `recharts` | ^3 | Chart components used in the Executive Dashboard. |
+| `lucide-react` | ^1 | Icon library. |
+| `date-fns` | ^4 | Date formatting and timezone utilities. |
+
+## Cloudflare Pages configuration
+
+The `wrangler.toml` at the project root contains the Cloudflare Pages settings.
+
+```toml
+name = "zenn-os"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+```
+
+- `name` — the Cloudflare Pages project name.
+- `compatibility_date` — the Workers runtime compatibility date.
+- `nodejs_compat` — enables Node.js API compatibility in the Cloudflare runtime.
+- `pages_build_output_dir` — the directory Wrangler uploads when you run `wrangler pages deploy`.

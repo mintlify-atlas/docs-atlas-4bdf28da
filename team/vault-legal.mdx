@@ -1,0 +1,90 @@
+---
+title: "Project Vault and legal documents for team members"
+description: "Browse, upload, and version project assets in the vault, and view the NDA, IP transfer, and contractor agreements assigned to you."
+---
+
+The **My Work** section of Zenn OS includes two reference areas that do not directly involve logging work but are essential for delivery: the **Project Vault** for managing creative assets, and the **Legal & IP** screen for reviewing the agreements that govern your engagement with the agency.
+
+<Tabs>
+  <Tab title="Project Vault">
+
+## Project Vault
+
+Navigate to **Project Vault** at `/team/vault` to browse, upload, and manage all assets linked to your assigned projects. The vault is organized by project and then by folder, giving you a structured place to store raw footage, exports, audio, project files, and client review packages.
+
+### Browsing assets
+
+The vault opens with a folder sidebar on the left and a file grid or list view on the right. Select a project from the tabs at the top, then choose a folder to see its contents:
+
+| Folder | Typical contents |
+|--------|-----------------|
+| `01_Raw_Footage` | Unedited camera and screen recordings |
+| `02_Audio` | Voice-overs, sound design, and music tracks |
+| `03_Project_Files` | Editing project files (Premiere, After Effects, Figma, etc.) |
+| `04_Exports` | Rendered outputs and final deliverables |
+| `05_Client_Review` | Packages prepared for client feedback rounds |
+
+Use the search bar to filter files by name within the active folder.
+
+### Asset visibility
+
+Every asset has a `visibility` value that controls who can see it:
+
+- **`internal`** — visible only to agency team members. Clients cannot access these files through the client portal.
+- **`client_visible`** — visible to the assigned client through their **Asset Vault** in the client portal.
+
+When you upload an asset, its default visibility is `internal`. An admin or lead PM changes visibility to `client_visible` when a deliverable is ready to share. Check the asset's visibility before sharing a direct link to avoid exposing internal work-in-progress files to a client.
+
+### Uploading assets
+
+Click **Upload Asset** to open the upload modal. Drag a file onto the drop zone or click to browse, then set the file name, version string (e.g. `v2`), and destination folder. Click **Upload** to save. For a faster path when folder and version details are already set, click **Quick Upload** to add files directly without filling out the form.
+
+You can also drag files directly onto the main file area; a drop indicator appears and files are versioned automatically.
+
+### Versioning
+
+Every asset maintains a `versions` array. Each entry records a `version` string, an `uploadedAt` timestamp, and a `url`. When you upload a new version of an existing file, a new entry is added to that array rather than overwriting the previous one. To download or reference a specific version, open the file's context menu (the three-dot icon) and choose **Download** or **Copy Link** — links are version-specific.
+
+The `proofVersion` field on an asset identifies which version was formally submitted as proof for a milestone. Reviewers and admins can always retrieve the exact file that was submitted, regardless of how many newer versions you upload afterward.
+
+  </Tab>
+  <Tab title="Legal & IP">
+
+## Legal & IP
+
+Navigate to **Legal & IP** at `/team/legal` to view all contracts and agreements that have been assigned to you. Files appear here once an admin sends them through the contracts module.
+
+### Contract types
+
+As a team member, you are most likely to encounter the following contract types:
+
+| Type | Description |
+|------|-------------|
+| `contractor` | Contractor agreement setting out your engagement terms, rate, and scope of work with the agency. |
+| `nda` | Non-disclosure agreement restricting you from sharing client or agency information outside the project. |
+| `ip_transfer` | IP transfer or assignment agreement transferring ownership of work you produce to the agency or end client. |
+
+You may also see a `sow` (statement of work) attached to a specific project, or an `msa` (master services agreement) if your engagement covers multiple projects.
+
+### Contract status
+
+Each contract in your list shows a `status` value so you know exactly where it stands:
+
+| Status | What it means for you |
+|--------|-----------------------|
+| `draft` | The contract has been prepared but not yet sent to you. |
+| `sent` | The contract has been sent to your email or is ready for review in the portal. |
+| `viewed` | The agency can see that you have opened the document. |
+| `partially_signed` | One or more parties have signed but the contract is not yet fully executed. |
+| `executed` | All parties have signed. The agreement is fully in force. |
+
+### Viewing your contracts
+
+Select any contract card to open the document in the preview pane. Contracts relevant to a specific project include a `projectName` reference so you can match them to your active work on the assigned board.
+
+<Note>
+  You can only view contracts where you are the `recipientId`. Contracts assigned to other team members are not visible from your Legal & IP screen. Contact an admin if you believe a contract has been sent to the wrong recipient.
+</Note>
+
+  </Tab>
+</Tabs>

@@ -1,0 +1,51 @@
+---
+title: "First-time onboarding flow in Zenn OS explained"
+description: "How first-time Zenn OS users complete workspace identity verification before accessing their role-specific dashboard for the first time."
+---
+
+When you log in to Zenn OS for the first time, the system checks whether your account has been onboarded. If it has not, you are automatically redirected to the onboarding screen before you can access any part of the platform. This is a one-time step — once complete, you go directly to your dashboard on every subsequent login.
+
+<Note>
+  Only first-time users see the onboarding flow. If your account is already marked as onboarded, you are taken directly to your role-specific dashboard after login.
+</Note>
+
+## Onboarding flow
+
+<Steps>
+  <Step title="Log in with your email">
+    Navigate to `/login` and enter your email address and password, then click **Enter Ecosystem**. Your role is detected automatically based on your email — no extra configuration is needed.
+  </Step>
+  <Step title="System detects your onboarding status">
+    After authentication, Zenn OS checks the `isOnboarded` flag on your account. If it is `false`, the system routes you to `/onboard` instead of your usual dashboard.
+  </Step>
+  <Step title="Complete workspace identity verification">
+    The onboarding screen displays your name and configured role for confirmation. Review the details shown — your name, your role access level — and click **Initialize Workspace** to continue.
+  </Step>
+  <Step title="Access your dashboard">
+    Once you confirm your identity, the system marks your account as onboarded and redirects you to your role-specific landing page. From this point forward, you go directly to that page on every login.
+  </Step>
+</Steps>
+
+## Profile fields collected during onboarding
+
+Your account record includes the following fields that are set up during or before the onboarding process.
+
+| Field | Description |
+|---|---|
+| `name` | Your full display name, shown throughout the OS. |
+| `title` | Your job title or position label (e.g. "Project Manager", "Brand Designer"). |
+| `timezone` | Your IANA timezone string (e.g. `America/Toronto`), used for nudge scheduling and deadline displays. |
+| `skills` | A list of skill tags, primarily used for affiliate users (e.g. `['Color Grading', 'DaVinci Resolve']`). |
+
+## After onboarding is complete
+
+Once you have completed the onboarding step, your account status moves from `limited` to `active` and you gain full access to the features your role permits. You are redirected to your default landing page based on your role:
+
+| Role | Landing page |
+|---|---|
+| Admin | `/admin/executive-dashboard` |
+| Employee | `/team/assigned-board` |
+| Affiliate | `/team/assigned-board` |
+| Client | `/portal/client-dashboard` |
+
+If you believe your role or profile details are incorrect after onboarding, contact your agency admin to update them.

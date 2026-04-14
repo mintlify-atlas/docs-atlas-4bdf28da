@@ -1,0 +1,110 @@
+---
+title: "Financial Ledger, Payout Allocator, and Analytics"
+description: "Track every incoming and outgoing transaction, reconcile invoices, distribute earnings to team members, and monitor agency margin health."
+---
+
+Zenn OS splits financial management across two dedicated tools: the **Financial Ledger**, which is the single source of truth for every dollar in and out, and the **Payout Allocator**, which turns approved milestone earnings into confirmed disbursements for team members. The Analytics dashboard sits alongside both, providing reporting on trends over time.
+
+<CardGroup cols={2}>
+  <Card title="Financial Ledger" icon="book-open">
+    Full transaction register with reconciliation checkboxes, flagging, and CSV/PDF export.
+  </Card>
+  <Card title="Payout Allocator" icon="credit-card">
+    Per-project earnings distribution with a 30% agency floor and a donut chart breakdown.
+  </Card>
+  <Card title="Analytics" icon="chart-bar">
+    Financial reporting dashboard for revenue trends, expense tracking, and period comparisons.
+  </Card>
+  <Card title="Cash flow heatmap" icon="grid-2">
+    Calendar-style heatmap showing incoming, outgoing, and overlapping cash flow days.
+  </Card>
+</CardGroup>
+
+## Financial Ledger
+
+Navigate to the Ledger at `/admin/ledger`. The page opens with a balance summary panel showing:
+
+- **Total Outstanding Receivables** — unpaid client invoices with status `pending` or `overdue`
+- **Total Liabilities** — pending outgoing payouts owed to affiliates and employees
+- **Liquidity Ratio** — the percentage of outstanding receivables after subtracting liabilities
+- **Tax Reserve** — automatically calculated as 30% of gross revenue; flagged as non-spendable
+
+Below the summary, a **Cash Flow Heatmap** shows each day of the current month as a small cell. Cell color indicates whether that day had incoming transactions (light), outgoing transactions (red), or both (darker red).
+
+### Transaction table
+
+The transaction table lists every `Transaction` record. Filter by `incoming`, `outgoing`, or view all. Use the search bar to find transactions by entity name or project name.
+
+<AccordionGroup>
+  <Accordion title="Transaction fields">
+    | Field | Type | Description |
+    |---|---|---|
+    | `id` | `string` | Unique transaction identifier (e.g., `txn_001`) |
+    | `date` | `string` | ISO date of the transaction |
+    | `entity` | `string` | Client name or team member name |
+    | `entityId` | `string` | User ID of the entity |
+    | `projectId` | `string` | Linked project ID |
+    | `projectName` | `string` | Display name of the linked project |
+    | `type` | `'incoming' \| 'outgoing'` | Direction of the money |
+    | `amount` | `number` | Dollar amount |
+    | `status` | `'paid' \| 'pending' \| 'overdue' \| 'cancelled'` | Payment status |
+    | `description` | `string` | Human-readable label (e.g., `Milestone 1-2 Payment`) |
+    | `invoiceId` | `string?` | Optional invoice or purchase order reference |
+    | `isFlagged` | `boolean?` | True when the amount exceeds the original estimate margin |
+    | `isReconciled` | `boolean?` | True when you have confirmed the transaction matches your bank |
+  </Accordion>
+  <Accordion title="Transaction statuses">
+    | Status | Meaning |
+    |---|---|
+    | `paid` | Money has been received or sent and confirmed |
+    | `pending` | Invoice issued or payout queued, awaiting settlement |
+    | `overdue` | Payment was due and has not been received |
+    | `cancelled` | Transaction voided; not included in totals |
+  </Accordion>
+  <Accordion title="Flags and reconciliation">
+    Check the **Reconciled** checkbox on any row to mark a transaction as matched against your bank statement. Reconciled transactions display a left border accent.
+
+    Transactions with `isFlagged: true` render with a warning triangle. These appear when an outgoing amount exceeds the margin established in the original quote, indicating potential profit erosion. Click the detail icon on a flagged row to open the transaction drawer and read the flag explanation.
+  </Accordion>
+</AccordionGroup>
+
+You can export the full ledger as a CSV using the **Export CSV** button, or generate a formatted PDF report using **PDF Report**.
+
+## Payout Allocator
+
+Navigate to the Payout Allocator at `/admin/payout`. Select an active project from the tab strip at the top — each tab shows a project name and switches the allocation interface to that project's team and total value.
+
+### How allocations work
+
+The allocator starts with the project's `totalValue` and lets you assign a dollar amount to each non-admin team member. The remaining balance after all allocations stays with the agency as margin.
+
+<AccordionGroup>
+  <Accordion title="PayoutAllocation fields">
+    | Field | Type | Description |
+    |---|---|---|
+    | `userId` | `string` | Team member receiving the payout |
+    | `userName` | `string` | Display name |
+    | `role` | `string` | Their role on the project |
+    | `allocationType` | `'fixed' \| 'percentage'` | Whether the amount is a flat number or a share of total value |
+    | `amount` | `number` | Dollar amount to disburse |
+    | `percentage` | `number?` | Populated when `allocationType` is `'percentage'` |
+    | `notes` | `string?` | Internal note explaining the amount (bonuses, penalties) |
+  </Accordion>
+  <Accordion title="Agency margin floor">
+    The allocator enforces a **30% minimum agency margin**. If your allocations push the agency share below this threshold, the **Confirm to Owed Ledger** button disables and a warning appears. You need an Admin Override Code to proceed below the floor.
+
+    The donut chart on the left updates in real time as you adjust allocations, showing each person's share and the agency's remaining margin as color-coded segments.
+  </Accordion>
+  <Accordion title="Equitable split">
+    Click **Equitable Split** to divide 70% of the project value evenly across all non-admin team members. This is a starting point — you can still adjust individual amounts after applying it.
+  </Accordion>
+  <Accordion title="Bonuses and penalties">
+    Use the **Internal Notes** field to document adjustments. Quick-insert buttons let you append a `+$200 bonus — expedited delivery` or `-$100 penalty — missed deadline` note to the running text. Notes are stored with the payout record for audit purposes.
+  </Accordion>
+</AccordionGroup>
+
+When you click **Confirm to Owed Ledger**, the allocations are locked and appear as `outgoing` / `pending` transactions in the Financial Ledger, ready for you to mark as `paid` once you process the actual transfers.
+
+## Analytics
+
+The Analytics page at `/admin/analytics` provides trend charts for revenue, expenses, and net profit across configurable date ranges. Use it alongside the Executive Dashboard's P&L chart for deeper historical context.
